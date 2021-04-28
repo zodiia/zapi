@@ -1,4 +1,4 @@
-image: maven:3.8.1-openjdk-11
+image: maven:3.6.3-openjdk-11
 
 cache:
   untracked: true
@@ -11,15 +11,15 @@ stages:
 
 #lint:
 #  stage: test
-#  script: mvn detekt:check
+#  script: "mvn detekt:check -s mvn_settings.xml"
 
 junit:
   stage: test
-  script: "mvn -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode -U test"
+  script: "mvn -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode -U test -s mvn_settings.xml"
 
 build:
   stage: test
-  script: "mvn -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode -U -DskipTests clean install"
+  script: "mvn -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode -U -DskipTests clean install -s mvn_settings.xml"
   except:
     - master
     - develop
