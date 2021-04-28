@@ -1,4 +1,4 @@
-image: java:11-jdk
+image: openjdk:11-jdk
 
 cache:
   untracked: true
