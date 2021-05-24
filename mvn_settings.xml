@@ -2,9 +2,9 @@
           xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <servers>
     <server>
-      <id>int</id>
-      <username>${env.MVN_USER}</username>
-      <password>${env.MVN_PWD}</password>
+      <id>zodiia-public</id>
+      <username>${env.JFROG_USER}</username>
+      <password>${env.JFROG_PASSWORD}</password>
     </server>
   </servers>
 </settings>

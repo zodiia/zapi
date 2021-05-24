@@ -1,4 +1,4 @@
-image: maven:3.6.3-openjdk-11
+image: maven:3.8.1-openjdk-8
 
 cache:
   untracked: true
@@ -6,23 +6,14 @@ cache:
     - "$CI_PROJECT_DIR/.m2/repository"
 
 stages:
-  - test
+  - build
   - deploy
 
-#lint:
-#  stage: test
-#  script: "mvn detekt:check -s mvn_settings.xml"
-
-junit:
-  stage: test
-  script: "mvn -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode -U test -s mvn_settings.xml"
-
 build:
-  stage: test
+  stage: build
+  artifacts:
+    untracked: true
   script: "mvn -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode -U -DskipTests clean install -s mvn_settings.xml"
-  except:
-    - master
-    - develop
 
 deploy-snapshot:
   stage: deploy

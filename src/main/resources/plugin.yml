@@ -1,0 +1,19 @@
+main: me.zodiia.api.ApiPlugin
+version: ${project.version}
+name: ${project.name}
+api-version: ${minecraft.apiVersion}
+author: Zodiia
+load: STARTUP
+softdepend:
+  - Vault
+  - PlaceholderAPI
+description: Zodiia's API
+libraries:
+  - "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin.version}"
+  - "org.jetbrains.kotlin:kotlin-reflect:${kotlin.version}"
+  - "org.jetbrains.kotlinx:kotlinx-serialization-json:${serialization.version}"
+  - "com.charleskorn.kaml:kaml:${serialization.kaml.version}"
+  - "com.h2database:h2:${h2.version}"
+  - "mysql:mysql-connector-java:${mysql-jdbc.version}"
+  - "org.mariadb.jdbc:mariadb-java-client:${mariadb-jdbc.version}"
+  - "org.postgresql:postgresql:${postgresql-jdbc.version}"

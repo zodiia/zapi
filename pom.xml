@@ -5,35 +5,52 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.zodiia</groupId>
-  <artifactId>zAPI</artifactId>
+  <artifactId>Api</artifactId>
   <version>5.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>zAPI</name>
+  <name>zApi</name>
+  <url>https://zodiia.moe</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
-    <kotlin.version>1.4.32</kotlin.version>
+    <kotlin.version>1.5.0</kotlin.version>
+    <serialization.version>1.2.1</serialization.version>
+    <serialization.kaml.version>0.33.0</serialization.kaml.version>
+    <h2.version>1.4.200</h2.version>
+    <mysql-jdbc.version>8.0.24</mysql-jdbc.version>
+    <mariadb-jdbc.version>2.7.2</mariadb-jdbc.version>
+    <postgresql-jdbc.version>42.2.20</postgresql-jdbc.version>
+    <minecraft.apiVersion>1.16</minecraft.apiVersion>
   </properties>
 
   <repositories>
     <repository>
-      <id>ext</id>
-      <url>http://repo.zodiakk.me/repository/ext/</url>
+      <id>zodiia-remotes</id>
+      <name>Mirrors</name>
+      <url>https://zodiia.jfrog.io/artifactory/remotes/</url>
     </repository>
 
     <repository>
       <id>jitpack.io</id>
+      <name>Jitpack.io</name>
       <url>https://jitpack.io</url>
+    </repository>
+
+    <repository>
+      <id>zodiia-public</id>
+      <name>Public releases</name>
+      <url>https://zodiia.jfrog.io/artifactory/maven-public/</url>
     </repository>
   </repositories>
 
   <distributionManagement>
     <repository>
-      <id>int</id>
-      <url>http://repo.zodiakk.me/repository/int/</url>
+      <id>zodiia-public</id>
+      <name>Public releases</name>
+      <url>https://zodiia.jfrog.io/artifactory/maven-public/</url>
     </repository>
   </distributionManagement>
 
@@ -42,6 +59,28 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
       <version>${kotlin.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-serialization-json</artifactId>
+      <version>${serialization.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.charleskorn.kaml</groupId>
+      <artifactId>kaml</artifactId>
+      <version>${serialization.kaml.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -58,18 +97,80 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.Minikloon</groupId>
+      <artifactId>FSMgasm</artifactId>
+      <version>-bd1b5057a3-1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-stdlib-jre8</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>me.clip</groupId>
+      <artifactId>placeholderapi</artifactId>
+      <version>2.10.9</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.MilkBowl</groupId>
+      <artifactId>VaultAPI</artifactId>
+      <version>1.7</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-jdbc.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>${mariadb-jdbc.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql-jdbc.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test-junit</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
-    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+    <sourceDirectory>src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <resources>
       <resource>
+        <filtering>true</filtering>
         <directory>${project.basedir}/src/main/resources</directory>
       </resource>
     </resources>
@@ -99,6 +200,19 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <compilerPlugins>
+            <plugin>kotlinx-serialization</plugin>
+          </compilerPlugins>
+          <jvmTarget>1.8</jvmTarget>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-serialization</artifactId>
+            <version>1.5.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -109,16 +223,24 @@
           <relocations>
             <relocation>
               <pattern>de.tr7zw.changeme.nbtapi</pattern>
-              <shadedPattern>me.zodiia.api.nbtapi</shadedPattern>
+              <shadedPattern>de.tr7zw.nbtapi</shadedPattern>
             </relocation>
           </relocations>
+          <artifactSet>
+            <excludes>
+              <exclude>org.slf4j:slf4j-api</exclude>
+            </excludes>
+          </artifactSet>
           <filters>
             <filter>
               <artifact>*:*</artifact>
               <excludes>
-                <exclude>META-INF/*</exclude>
-                <exclude>META-INF.*</exclude>
+                <exclude>META-INF/*.SF</exclude>
+                <exclude>META-INF/*.DSA</exclude>
+                <exclude>META-INF/*.RSA</exclude>
+                <exclude>META-INF/LICENSE</exclude>
                 <exclude>LICENSE</exclude>
+                <exclude>me.zodiia.api</exclude>
               </excludes>
             </filter>
           </filters>
@@ -133,12 +255,9 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.2</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.22.2</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.0.0-M1</version>
       </plugin>
     </plugins>
   </build>

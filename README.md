@@ -2,11 +2,7 @@
 
 ZApi is a Minecraft library aimed at saving time when developing Minecraft plugins.
 
-It contains multiple modules, each implementing a set of features related to a specific aspect of the Spigot API, or the game.
-
-## List of modules
-
-TODO
+It contains multiple sets of features, each related to a specific aspect of the Spigot API, of a library, or of the game.
 
 ## Compatibility between versions
 
@@ -15,35 +11,18 @@ TODO
 | API v1 | N/A |
 | API v2 | N/A |
 | API v3 | API v2 |
-| API v4 | API v3 *(partial)* |
-| API v5 | API v3 *(partial)*, API v4 *(partial)* |
+| API v4 | API v3 *(partial)*, API v2 *(partial)* |
+| API v5 | N/A |
 
+## Planned features
 
-
-## List of plugins implementing zAPI
-
-*This plugin, or some previous version of it, is required for the following projects:*
-
-| API version | Server | Project |
+| Feature | Delivery version | Current state |
 | :---: | :---: | :---: |
-| API v1 | Chocolia | ChocoCoinflip |
-| API v1 | Chocolia | ChocoDailyRewards |
-| API v1 | Chocolia | ChocoRankup |
-| API v2 | Soleria | SoleriaCoinflip |
-| API v2 | Soleria | SoleriaDailyRewards |
-| API v2 | Soleria | SoleriaDuels |
-| API v2 | Soleria | SoleriaDynamicSGP |
-| API v2 | Soleria | SoleriaRankup |
-| API v3 | Soleria v2 | Argiles |
-| API v3 | Soleria v2 | Coinflip |
-| API v3 | Soleria v2 | CustomItems |
-| API v3 | Soleria v2 | DailyRewards |
-| API v3 | Soleria v2 | Poubelle |
-| API v3 | Soleria v2 | Rankup |
-| API v3 | Soleria v2 | DatabaseTester |
-| API v4 | Breakerland | Christmas Calendar |
-| API v4 | Horizion | hItems |
-| API v4 | Horizion | LoginUtils |
-| API v4 | Lenaria | FactionsUUID |
-| API v4 | Lenaria | zCore |
-| API v4 | Idralwel | Trade |
+| Commands API | 5.0-M1 | Under testing |
+| Threads | 5.0-M1 | Under testing |
+| PlaceholderAPI integration | 5.0-M2 | Under testing |
+| Menu API | 5.0-M3 | Under development |
+| Vault integration | 5.0-M4 | Done |
+| Databases (with SQL engine) | 5.0-M5 | Under development |
+| kotlinx.serialization engine for databases | `N/A` | Planned |
+| MongoDB engine for databases | `N/A` | Planned |
