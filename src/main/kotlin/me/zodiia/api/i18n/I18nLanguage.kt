@@ -8,9 +8,10 @@ import java.io.File
 class I18nLanguage(val language: String, file: File) {
     private val keys = mutableMapOf<String, String>()
     private val multilineKeys = mutableMapOf<String, List<String>>()
+    val json: JsonObject = JsonParser().parse(file.readText()).asJsonObject
 
     init {
-        parseJsonSection(JsonParser().parse(file.readText()).asJsonObject)
+        parseJsonSection(json)
     }
 
     private fun parseJsonSection(section: JsonObject, key: String = "") {
