@@ -21,7 +21,7 @@
     <serialization.kaml.version>0.33.0</serialization.kaml.version>
     <h2.version>1.4.200</h2.version>
     <mysql-jdbc.version>8.0.24</mysql-jdbc.version>
-    <mariadb-jdbc.version>2.7.2</mariadb-jdbc.version>
+    <mariadb-jdbc.version>2.7.3</mariadb-jdbc.version>
     <postgresql-jdbc.version>42.2.20</postgresql-jdbc.version>
     <minecraft.apiVersion>1.16</minecraft.apiVersion>
   </properties>
@@ -59,35 +59,30 @@
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
       <version>${kotlin.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-reflect</artifactId>
       <version>${kotlin.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.jetbrains.kotlinx</groupId>
       <artifactId>kotlinx-serialization-json</artifactId>
       <version>${serialization.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.charleskorn.kaml</groupId>
       <artifactId>kaml</artifactId>
       <version>${serialization.kaml.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
       <version>1.16.5-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -118,42 +113,36 @@
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
       <version>2.10.9</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.github.MilkBowl</groupId>
       <artifactId>VaultAPI</artifactId>
       <version>1.7</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>${h2.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>${mysql-jdbc.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
       <version>${mariadb-jdbc.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${postgresql-jdbc.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -233,9 +222,13 @@
             </relocation>
           </relocations>
           <artifactSet>
-            <excludes>
-              <exclude>org.slf4j:slf4j-api</exclude>
-            </excludes>
+            <includes>
+              <include>de.tr7zw:functional-annotations</include>
+              <include>com.github.Minikloon:FSMgasm</include>
+              <include>com.github.Minikloon:Kloggs</include>
+              <include>fr.minuskube.inv:smart-invs</include>
+              <include>de.tr7zw:item-nbt-api</include>
+            </includes>
           </artifactSet>
           <filters>
             <filter>
