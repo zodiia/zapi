@@ -7,4 +7,8 @@ class ApiPlugin: JavaPlugin() {
     override fun onLoad() {
         Threads.startSyncTask(this)
     }
+
+    companion object {
+        val plugin by lazy { getPlugin(ApiPlugin::class.java) }
+    }
 }

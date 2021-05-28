@@ -6,22 +6,20 @@ import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.plugin.Plugin
-import org.bukkit.plugin.java.JavaPlugin
 
 object Events: Listener {
     fun <T: Event> emit(event: T) {
         Bukkit.getServer().pluginManager.callEvent(event)
     }
 
-    fun <T: Event> on(
-        clazz: Class<out Event>,
-        plugin: Plugin = JavaPlugin.getPlugin(ApiPlugin::class.java),
+    inline fun <reified T: Event> on(
+        plugin: Plugin = ApiPlugin.plugin,
         priority: EventPriority = EventPriority.NORMAL,
         ignoreCancelled: Boolean = false,
-        fct: (T) -> Unit,
+        crossinline fct: (T) -> Unit,
     ) {
         Bukkit.getServer().pluginManager.registerEvent(
-            clazz,
+            T::class.java,
             this,
             priority,
             { _, genericEvent ->

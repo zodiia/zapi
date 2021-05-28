@@ -1,54 +1,66 @@
 package me.zodiia.api.menu
 
-import org.bukkit.Bukkit
+import fr.minuskube.inv.InventoryListener
+import fr.minuskube.inv.SmartInventory
+import fr.minuskube.inv.content.InventoryContents
+import fr.minuskube.inv.content.InventoryProvider
+import org.bukkit.entity.Player
+import org.bukkit.event.Event
+import org.bukkit.event.inventory.InventoryEvent
 import org.bukkit.event.inventory.InventoryType
-import org.bukkit.inventory.Inventory
-import java.util.UUID
 
 class Menu(
-    dsl: Menu.() -> Unit
+    dsl: Menu.() -> Unit,
 ) {
-    private var openExecutor: (Context) -> Boolean
-    private var closeExecutor: (Context) -> Boolean
-    var name: String? = null
-    var size: Int = 54
-    var type: InventoryType = InventoryType.CHEST
+    private val builder = SmartInventory.builder()
+    private val menu: SmartInventory
+    private var initFct: (Player?, InventoryContents?) -> Unit
+    private var updateFct: (Player?, InventoryContents?) -> Unit
+    var id: String
+        get() = throw IllegalStateException()
+        set(value) { builder.id(value) }
+    var title: String
+        get() = throw IllegalStateException()
+        set(value) { builder.title(title) }
+    var type: InventoryType
+        get() = throw IllegalStateException()
+        set(value) { builder.type(type) }
+    var rows: Int = 6
+        set(value) { builder.size(value, columns); field = value }
+    var columns: Int = 9
+        set(value) { builder.size(rows, value); field = value }
+    var closeable: Boolean
+        get() = throw IllegalStateException()
+        set(value) { builder.closeable(closeable) }
 
     init {
-        openExecutor = { true }
-        closeExecutor = { true }
+        initFct = { _, _ -> }
+        updateFct = { _, _ -> }
         dsl.invoke(this)
+        builder.manager(Menus.inventoryManager)
+        builder.provider(asProvider())
+        menu = builder.build()
     }
 
-    private fun create(): Inventory {
-        val inventory =
-            if (name != null) {
-                if (type != InventoryType.CHEST) {
-                    Bukkit.createInventory(null, type, name!!)
-                } else {
-                    Bukkit.createInventory(null, size, name!!)
-                }
-            } else {
-                if (type != InventoryType.CHEST) {
-                    Bukkit.createInventory(null, type)
-                } else {
-                    Bukkit.createInventory(null, size)
-                }
-            }
+    private fun asProvider(): InventoryProvider = object: InventoryProvider {
+        override fun init(player: Player?, contents: InventoryContents?) {
+            initFct.invoke(player, contents)
+        }
 
-
-        return inventory
+        override fun update(player: Player?, contents: InventoryContents?) {
+            updateFct.invoke(player, contents)
+        }
     }
 
-    fun openExecutor(fct: (Context) -> Boolean) {
-        openExecutor = fct
+    fun <T: Event> listener(type: Class<T>, fct: (T) -> Unit) {
+        builder.listener(InventoryListener(type, fct))
     }
 
-    fun closeExecutor(fct: (Context) -> Boolean) {
-        closeExecutor = fct
+    fun init(fct: (Player?, InventoryContents?) -> Unit) {
+        initFct = fct
     }
 
-    companion object {
-        private val inventories = hashMapOf<UUID, Inventory>()
+    fun update(fct: (Player?, InventoryContents?) -> Unit) {
+        updateFct = fct
     }
 }

@@ -18,3 +18,11 @@ fun tryFct(fct: () -> Unit): Throwable? {
     catch (th: Throwable) { return th }
     return null
 }
+
+fun <T: Any?> ternary(condition: Boolean, trueValue: T, falseValue: T) =
+    if (condition) trueValue
+    else falseValue
+
+fun <T: Any?> ternary(condition: () -> Boolean, trueValue: T, falseValue: T) =
+    if (condition.invoke()) trueValue
+    else falseValue

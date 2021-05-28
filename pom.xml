@@ -16,7 +16,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
-    <kotlin.version>1.5.0</kotlin.version>
+    <kotlin.version>1.5.10</kotlin.version>
     <serialization.version>1.2.1</serialization.version>
     <serialization.kaml.version>0.33.0</serialization.kaml.version>
     <h2.version>1.4.200</h2.version>
@@ -106,6 +106,12 @@
           <artifactId>kotlin-stdlib-jre8</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>fr.minuskube.inv</groupId>
+      <artifactId>smart-invs</artifactId>
+      <version>1.2.7</version>
     </dependency>
 
     <dependency>

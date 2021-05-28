@@ -17,8 +17,11 @@ class Command(dsl: Command.() -> Unit) {
     private val subcommands = hashMapOf<String, Command>()
     private val arguments = sortedMapOf<Int, Argument>()
     private var executor: ((Context) -> Unit)
+    private var syntaxReassigned = false
     private var syntaxExecutor: ((Context, Int) -> Unit)
+    private var permissionReassigned = false
     private var permissionExecutor: ((Context) -> Unit)
+    private var internalErrorReassigned = false
     private var internalErrorExecutor: ((Context, Throwable) -> Unit)
 
     /**
@@ -164,9 +167,25 @@ class Command(dsl: Command.() -> Unit) {
     fun subcommand(name: String, dsl: Command.() -> Unit) {
         val cmd = Command(dsl)
 
-        cmd.internalErrorExecutor = internalErrorExecutor
-        cmd.permissionExecutor = permissionExecutor
-        cmd.syntaxExecutor = syntaxExecutor
+        subcommand(name, cmd)
+    }
+
+    /**
+     * Creates a new subcommand from an already defined object
+     *
+     * @param name Primary name (syntax) of the command
+     * @param cmd Subcommand object
+     */
+    fun subcommand(name: String, cmd: Command) {
+        if (!cmd.internalErrorReassigned) {
+            cmd.internalErrorExecutor = internalErrorExecutor
+        }
+        if (!cmd.permissionReassigned) {
+            cmd.permissionExecutor = permissionExecutor
+        }
+        if (!cmd.syntaxReassigned) {
+            cmd.syntaxExecutor = syntaxExecutor
+        }
         subcommands[name] = cmd
     }
 
@@ -181,6 +200,16 @@ class Command(dsl: Command.() -> Unit) {
     }
 
     /**
+     * Adds a new command argument from an already defined object
+     *
+     * @param idx Argument index (always starts at 0)
+     * @param arg Argument object
+     */
+    fun argument(idx: Int, arg: Argument) {
+        arguments[idx] = arg
+    }
+
+    /**
      * Command executor
      */
     fun executor(fct: (Context) -> Unit) {
@@ -191,6 +220,7 @@ class Command(dsl: Command.() -> Unit) {
      * Bad permissions executor
      */
     fun permissionExecutor(fct: (Context) -> Unit) {
+        permissionReassigned = true
         permissionExecutor = fct
     }
 
@@ -198,6 +228,7 @@ class Command(dsl: Command.() -> Unit) {
      * Invalid syntax executor
      */
     fun syntaxExecutor(fct: (Context, Int) -> Unit) {
+        syntaxReassigned = true
         syntaxExecutor = fct
     }
 
@@ -205,6 +236,7 @@ class Command(dsl: Command.() -> Unit) {
      * Internal error executor
      */
     fun internalErrorExecutor(fct: (Context, Throwable) -> Unit) {
+        internalErrorReassigned = true
         internalErrorExecutor = fct
     }
 }
