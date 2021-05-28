@@ -7,6 +7,8 @@ import kotlin.math.ceil
 class HelpMenu(val name: String, val label: String) {
     private val commands = sortedMapOf<String, String>()
     private val pages = arrayListOf<List<String>>()
+    var header: String? = null
+    var footer: String? = null
 
     fun addCommand(command: String, description: String) {
         commands[command] = description
@@ -22,21 +24,21 @@ class HelpMenu(val name: String, val label: String) {
         commands.forEach {
             if (idx == perPage) {
                 if (currentPage != null) {
-                    currentPage!!.add("")
+                    footer?.let { footer -> currentPage!!.add(footer) }
                     pages.add(currentPage!!)
                 }
                 currentPage = arrayListOf()
                 currentPageIdx++
                 idx = 0
                 currentPage!!.add("&7 -------[ &2Help: &e${name} &7(&2Page: &e${currentPageIdx}&7/&e${totalPages}&7) ]-------".translateColors())
-                currentPage!!.add("")
+                header?.let { header -> currentPage!!.add(header) }
             }
             idx++
-            currentPage!!.add(" &7➜ &e/${label} ${it.key} &8&l- &3${it.value}")
+            currentPage!!.add(" &8➜ &e/${label} ${it.key} &8&l- &3${it.value}")
         }
         idx++
         if (currentPage != null) {
-            currentPage!!.add("")
+            footer?.let { footer -> currentPage!!.add(footer) }
             pages.add(currentPage!!)
         }
     }
