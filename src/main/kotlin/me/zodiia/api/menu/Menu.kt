@@ -17,20 +17,20 @@ class Menu(
     private var initFct: (Player?, InventoryContents?) -> Unit
     private var updateFct: (Player?, InventoryContents?) -> Unit
     var id: String
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("Cannot get the value.")
         set(value) { builder.id(value) }
     var title: String
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("Cannot get the value.")
         set(value) { builder.title(title) }
     var type: InventoryType
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("Cannot get the value.")
         set(value) { builder.type(type) }
     var rows: Int = 6
         set(value) { builder.size(value, columns); field = value }
     var columns: Int = 9
         set(value) { builder.size(rows, value); field = value }
     var closeable: Boolean
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("Cannot get the value.")
         set(value) { builder.closeable(closeable) }
 
     init {

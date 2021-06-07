@@ -8,6 +8,7 @@ import java.time.ZoneId
 
 object Scheduler {
     private val scheduledTasks = hashSetOf<Task>()
+    private const val TICKS_PER_SECOND = 20L
 
     init {
         Bukkit.getScheduler().runTaskTimer(JavaPlugin.getPlugin(ApiPlugin::class.java), Runnable {
@@ -23,7 +24,7 @@ object Scheduler {
                     scheduledTasks.remove(task)
                 }
             }
-        }, 20L, 20L)
+        }, TICKS_PER_SECOND, TICKS_PER_SECOND)
     }
 
     fun schedule(time: LocalDateTime, executor: Runnable, identifier: String) {

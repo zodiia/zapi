@@ -18,8 +18,8 @@ object Reflects {
         try {
             @Suppress("UNCHECKED_CAST")
             clazz = (Class.forName(className) as Class<T>)
-        } catch (err: Throwable) {
-            Console.error(err)
+        } catch (any: Throwable) {
+            Console.error(any)
         }
         return clazz
     }

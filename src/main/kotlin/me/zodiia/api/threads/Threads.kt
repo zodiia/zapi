@@ -1,5 +1,6 @@
 package me.zodiia.api.threads
 
+import me.zodiia.api.ApiPlugin
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitTask
@@ -17,6 +18,11 @@ object Threads {
     private val executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()) as ThreadPoolExecutor
     private var syncTask: BukkitTask? = null
     private val syncTaskQueue: Queue<TaskExecutor<Unit>> = LinkedList()
+    private const val TERMINATION_TIMEOUT = 30000L
+
+    init {
+        Threads.startSyncTask(ApiPlugin.plugin)
+    }
 
     fun runAsync(fct: TaskExecutor<Unit>): CompletablePromise<*> {
         return CompletablePromise(executor.submit(fct, Unit))
@@ -45,6 +51,6 @@ object Threads {
     fun close() {
         syncTask?.cancel()
         executor.shutdown()
-        executor.awaitTermination(30000, TimeUnit.MILLISECONDS)
+        executor.awaitTermination(TERMINATION_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 }

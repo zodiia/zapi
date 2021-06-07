@@ -294,13 +294,32 @@
         </executions>
       </plugin>
 
+<!--      <plugin>-->
+<!--        <groupId>org.jetbrains.dokka</groupId>-->
+<!--        <artifactId>dokka-maven-plugin</artifactId>-->
+<!--        <version>1.4.32</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>pre-site</phase>-->
+<!--            <goals>-->
+<!--              <goal>dokka</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <source>1.8</source>
-        </configuration>
+        <groupId>com.github.ozsie</groupId>
+        <artifactId>detekt-maven-plugin</artifactId>
+        <version>1.17.1</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

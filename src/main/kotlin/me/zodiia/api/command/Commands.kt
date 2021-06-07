@@ -1,6 +1,5 @@
 package me.zodiia.api.command
 
-import org.bukkit.command.Command as BukkitCommand
 import me.zodiia.api.logger.Console
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandMap
@@ -29,7 +28,6 @@ object Commands {
     fun register(label: String, plugin: Plugin, command: Command) {
         register(label, plugin.name, command)
     }
-
 
     /**
      * Register a new command

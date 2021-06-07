@@ -2,7 +2,6 @@ package me.zodiia.api.placeholder
 
 import org.bukkit.entity.Player
 import java.time.Instant
-import java.util.regex.Pattern
 
 class Placeholder(
     val name: String,
@@ -27,6 +26,7 @@ class Placeholder(
         return executor.invoke(context)
     }
 
+    @Suppress("MemberNameEqualsClassName")
     fun placeholder(name: String, dsl: Placeholder.() -> Unit) {
         val placeholder = Placeholder(name, dsl)
 

@@ -9,6 +9,7 @@ import java.io.File
 import javax.sql.DataSource
 import org.jetbrains.exposed.sql.transactions.transaction as sqlTransaction
 
+@Suppress("UnnecessaryAbstractClass")
 abstract class DataSourceProvider(
     dataFolder: File,
     yamlConfig: ConfigurationSection
