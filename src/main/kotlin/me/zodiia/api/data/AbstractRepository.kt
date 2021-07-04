@@ -9,7 +9,8 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.emptySized
 import org.jetbrains.exposed.sql.transactions.transaction
 
-abstract class AbstractRepository<I: Comparable<I>, T: Entity<I>>(
+@Suppress("UnnecessaryAbstractClass")
+abstract class AbstractRepository<I : Comparable<I>, T : Entity<I>>(
     protected val entityClass: EntityClass<I, T>,
     protected val db: Database,
 ) {

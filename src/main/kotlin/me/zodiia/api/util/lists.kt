@@ -1,6 +1,6 @@
 package me.zodiia.api.util
 
-fun <T: Any> T?.validateWhitelist(values: Collection<T?>): Boolean {
+fun <T : Any> T?.validateWhitelist(values: Collection<T?>): Boolean {
     if (values.isEmpty()) {
         return false
     }
@@ -12,7 +12,7 @@ fun <T: Any> T?.validateWhitelist(values: Collection<T?>): Boolean {
     return false
 }
 
-fun <T: Any> T?.validateBlacklist(values: Collection<T?>): Boolean {
+fun <T : Any> T?.validateBlacklist(values: Collection<T?>): Boolean {
     return !(this.validateWhitelist(values))
 }
 

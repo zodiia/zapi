@@ -16,6 +16,11 @@ object Threads {
     private val executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()) as ThreadPoolExecutor
     private var syncTask: BukkitTask? = null
     private val syncTaskQueue: Queue<TaskExecutor<Unit>> = LinkedList()
+    private const val TERMINATION_TIMEOUT = 30000L
+
+    init {
+        Threads.startSyncTask(ApiPlugin.plugin)
+    }
 
     init {
         startSyncTask(ApiPlugin.plugin)
@@ -48,6 +53,6 @@ object Threads {
     fun close() {
         syncTask?.cancel()
         executor.shutdown()
-        executor.awaitTermination(30000, TimeUnit.MILLISECONDS)
+        executor.awaitTermination(TERMINATION_TIMEOUT, TimeUnit.MILLISECONDS)
     }
 }

@@ -7,12 +7,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.plugin.Plugin
 
-object Events: Listener {
-    fun <T: Event> emit(event: T) {
+object Events : Listener {
+    fun <T : Event> emit(event: T) {
         Bukkit.getServer().pluginManager.callEvent(event)
     }
 
-    inline fun <reified T: Event> on(
+    inline fun <reified T : Event> on(
         plugin: Plugin = ApiPlugin.plugin,
         priority: EventPriority = EventPriority.NORMAL,
         ignoreCancelled: Boolean = false,

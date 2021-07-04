@@ -32,10 +32,11 @@ fun Int.toRomanString(): String {
         }
     }
 
-    if (this == key) {
-        return romanNumberMap[key]!!
+    return if (this == key) {
+        romanNumberMap[key]!!
+    } else {
+        romanNumberMap[key]!! + (this - key).toRomanString()
     }
-    return romanNumberMap[key]!! + (this - key).toRomanString()
 }
 
 @Deprecated("Work in progress, do not use!")
@@ -56,5 +57,5 @@ fun ItemMeta.putItemEnchantsInLore() {
         } else {
             newLore.add("§7${entry.key.key.key} §c${entry.value.toRomanString()}")
         }
-    }}
+    } }
 }

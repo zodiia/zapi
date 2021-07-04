@@ -46,7 +46,6 @@ object Commands {
         register(label, plugin.name, command)
     }
 
-
     /**
      * Register a new command
      *

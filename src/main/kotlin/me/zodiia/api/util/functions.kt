@@ -14,15 +14,14 @@ inline fun <T: Any> notNull(it: T?, f: (it: T) -> Unit) {
 }
 
 fun tryFct(fct: () -> Unit): Throwable? {
-    try { fct() }
-    catch (th: Throwable) { return th }
+    try { fct() } catch (any: Throwable) { return any }
     return null
 }
 
-fun <T: Any?> ternary(condition: Boolean, trueValue: T, falseValue: T) =
+fun <T : Any?> ternary(condition: Boolean, trueValue: T, falseValue: T) =
     if (condition) trueValue
     else falseValue
 
-fun <T: Any?> ternary(condition: () -> Boolean, trueValue: T, falseValue: T) =
+fun <T : Any?> ternary(condition: () -> Boolean, trueValue: T, falseValue: T) =
     if (condition.invoke()) trueValue
     else falseValue

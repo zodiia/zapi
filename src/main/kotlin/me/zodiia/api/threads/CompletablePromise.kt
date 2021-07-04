@@ -4,9 +4,9 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Future
 
-class CompletablePromise<V: Any> constructor(
+class CompletablePromise<V : Any> constructor(
     private val future: Future<V>
-): CompletableFuture<V>() {
+) : CompletableFuture<V>() {
     private fun tryToComplete() {
         if (future.isDone) {
             try {

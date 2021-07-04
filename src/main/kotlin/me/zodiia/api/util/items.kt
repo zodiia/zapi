@@ -10,7 +10,7 @@ import java.util.regex.Pattern
 private val itemFactory = Bukkit.getServer().itemFactory
 const val MAX_LORE_LINE_LENGTH = 300 // FIXME: Dynamic configurations
 
-fun ItemMeta.parseLore() {
+fun ItemMeta.parseLore() { // TODO: Refactoring
     val newLore = mutableListOf<String>()
 
     if (lore == null) {
@@ -74,12 +74,10 @@ fun Material.match(pattern: String): Boolean {
 fun getMaterials(pattern: String): Set<Material> {
     val res = mutableSetOf<Material>()
     val isRegex = pattern.isRegex()
-    val finalPattern: String
-
-    if (isRegex) {
-        finalPattern = pattern.substring(1 until (pattern.length - 1))
+    val finalPattern = if (isRegex) {
+        pattern.substring(1 until (pattern.length - 1))
     } else {
-        finalPattern = pattern
+        pattern
     }
 
     if (isRegex || finalPattern.contains('*')) {

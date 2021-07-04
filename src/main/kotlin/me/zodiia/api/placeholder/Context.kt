@@ -6,5 +6,4 @@ import java.time.Instant
 class Context(
     val player: Player?,
     val instant: Instant,
-) {
-}
+)

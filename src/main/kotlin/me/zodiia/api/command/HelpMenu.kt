@@ -14,7 +14,7 @@ class HelpMenu(val name: String, val label: String) {
         commands[command] = description
     }
 
-    fun build(perPage: Int = DEFAULT_CMDS_PER_PAGE) {
+    fun build(perPage: Int = DEFAULT_CMDS_PER_PAGE) { // TODO: Refactoring
         val totalPages = ceil(commands.size.toDouble() / perPage.toDouble())
         var currentPageIdx = 0
         var currentPage: ArrayList<String>? = null
@@ -30,11 +30,11 @@ class HelpMenu(val name: String, val label: String) {
                 currentPage = arrayListOf()
                 currentPageIdx++
                 idx = 0
-                currentPage!!.add("&7 -------[ &2Help: &e${name} &7(&2Page: &e${currentPageIdx}&7/&e${totalPages}&7) ]-------".translateColors())
+                currentPage!!.add("&7 -------[ &2Help: &e$name &7(&2Page: &e${currentPageIdx}&7/&e${totalPages}&7) ]-------".translateColors())
                 header?.let { header -> currentPage!!.add(header) }
             }
             idx++
-            currentPage!!.add(" &8➜ &e/${label} ${it.key} &8&l- &3${it.value}")
+            currentPage!!.add(" &8➜ &e/$label ${it.key} &8&l- &3${it.value}")
         }
         idx++
         if (currentPage != null) {

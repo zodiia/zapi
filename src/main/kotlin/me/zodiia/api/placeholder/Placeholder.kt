@@ -26,6 +26,7 @@ class Placeholder(
         return executor.invoke(context)
     }
 
+    @Suppress("MemberNameEqualsClassName")
     fun placeholder(name: String, dsl: Placeholder.() -> Unit) {
         val placeholder = Placeholder(name, dsl)
 
