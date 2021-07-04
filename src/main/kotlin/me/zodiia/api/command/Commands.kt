@@ -1,6 +1,6 @@
 package me.zodiia.api.command
 
-import org.bukkit.command.Command as BukkitCommand
+import me.zodiia.api.ApiPlugin
 import me.zodiia.api.logger.Console
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandMap
@@ -10,13 +10,29 @@ object Commands {
     private var commandMap: CommandMap? = null
 
     init {
-        val commandMapField = Bukkit.getPluginManager().javaClass.getDeclaredField("commandMap")
+        try {
+            val commandMapField =
+                if (ApiPlugin.env == ApiPlugin.Env.TEST) {
+                    Bukkit.getServer().javaClass.getDeclaredField("commandMap")
+                } else {
+                    Bukkit.getPluginManager().javaClass.getDeclaredField("commandMap")
+                }
 
-        if (!commandMapField.trySetAccessible()) {
-            Console.error("Cannot retrieve the Bukkit command map.")
-        } else {
-            commandMap = commandMapField.get(Bukkit.getPluginManager()) as CommandMap
+            if (!commandMapField.trySetAccessible()) {
+                Console.error("Cannot retrieve the Bukkit command map.")
+            } else {
+                commandMap =
+                    if (ApiPlugin.env == ApiPlugin.Env.TEST) {
+                        commandMapField.get(Bukkit.getServer()) as CommandMap
+                    } else {
+                        commandMapField.get(Bukkit.getPluginManager()) as CommandMap
+                    }
+            }
+        } catch (ex: NoSuchFieldException) {
+            Console.error("Bukkit command map field doesn't exist in this environment.", ex)
         }
+
+
     }
 
     /**

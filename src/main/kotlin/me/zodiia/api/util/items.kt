@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import java.util.regex.Pattern
 
-val itemFactory = Bukkit.getServer().itemFactory
+private val itemFactory = Bukkit.getServer().itemFactory
 const val MAX_LORE_LINE_LENGTH = 300 // FIXME: Dynamic configurations
 
 fun ItemMeta.parseLore() {

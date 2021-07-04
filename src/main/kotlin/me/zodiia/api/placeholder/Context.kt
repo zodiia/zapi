@@ -1,6 +1,5 @@
 package me.zodiia.api.placeholder
 
-import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import java.time.Instant
 

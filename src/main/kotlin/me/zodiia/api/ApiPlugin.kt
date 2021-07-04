@@ -1,22 +1,30 @@
 package me.zodiia.api
 
-import me.zodiia.api.threads.Threads
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import java.io.File
 
+/**
+ *
+ */
 class ApiPlugin: JavaPlugin {
     constructor() : super()
     constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File) : super(
-        loader, description, dataFolder, file
+        loader, description, dataFolder, file,
     )
 
-    override fun onLoad() {
-        Threads.startSyncTask(this)
+    init {
+        constructedPlugin = this
     }
 
     companion object {
-        val plugin by lazy { getPlugin(ApiPlugin::class.java) }
+        private var constructedPlugin: JavaPlugin? = null
+        internal var env = Env.PRODUCTION
+
+        val plugin by lazy { constructedPlugin ?: getProvidingPlugin(ApiPlugin::class.java) }
+
     }
+
+    internal enum class Env { TEST, DEV, PRODUCTION }
 }

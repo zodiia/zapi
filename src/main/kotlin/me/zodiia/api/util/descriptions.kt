@@ -25,7 +25,7 @@ fun Int.toRomanString(): String {
     }
 
     var key: Int = 0
-    for (k in romanNumberMap.keys) {
+    for (k in romanNumberMap.keys.reversed()) {
         if (k <= this) {
             key = k
             break
@@ -38,6 +38,7 @@ fun Int.toRomanString(): String {
     return romanNumberMap[key]!! + (this - key).toRomanString()
 }
 
+@Deprecated("Work in progress, do not use!")
 fun ItemMeta.putItemEnchantsInLore() {
     if (hasLore()) {
         return

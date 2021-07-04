@@ -14,18 +14,21 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <exposed.version>0.31.1</exposed.version>
+    <h2.version>1.4.200</h2.version>
+    <hikaricp.version>4.0.3</hikaricp.version>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
     <kotlin.version>1.5.10</kotlin.version>
-    <serialization.version>1.2.1</serialization.version>
-    <serialization.kaml.version>0.33.0</serialization.kaml.version>
-    <h2.version>1.4.200</h2.version>
-    <mysql-jdbc.version>8.0.24</mysql-jdbc.version>
     <mariadb-jdbc.version>2.7.3</mariadb-jdbc.version>
-    <postgresql-jdbc.version>42.2.20</postgresql-jdbc.version>
-    <hikaricp.version>4.0.3</hikaricp.version>
-    <exposed.version>0.31.1</exposed.version>
     <minecraft.apiVersion>1.16</minecraft.apiVersion>
+    <mockbukkit.version>1.2.1</mockbukkit.version>
+    <mysql-jdbc.version>8.0.24</mysql-jdbc.version>
+    <nbtapi.version>2.7.1</nbtapi.version>
+    <postgresql-jdbc.version>42.2.20</postgresql-jdbc.version>
+    <serialization.kaml.version>0.33.0</serialization.kaml.version>
+    <serialization.version>1.2.1</serialization.version>
+    <spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
   </properties>
 
   <repositories>
@@ -47,6 +50,14 @@
       <url>https://zodiia.jfrog.io/artifactory/maven-public/</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>dokka-maven</id>
+      <name>Dokka repository</name>
+      <url>https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <distributionManagement>
     <repository>
@@ -105,14 +116,14 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.16.5-R0.1-SNAPSHOT</version>
+      <version>${spigot.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>de.tr7zw</groupId>
       <artifactId>item-nbt-api</artifactId>
-      <version>2.7.1</version>
+      <version>${nbtapi.version}</version>
     </dependency>
 
     <dependency>
@@ -193,7 +204,7 @@
     <dependency>
       <groupId>com.github.seeseemelk</groupId>
       <artifactId>MockBukkit-v1.16</artifactId>
-      <version>1.1.0</version>
+      <version>${mockbukkit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -257,19 +268,35 @@
           <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
           <relocations>
             <relocation>
+              <pattern>de.tr7zw.annotations</pattern>
+              <shadedPattern>me.zodiia.libs.tr7zw-annotations</shadedPattern>
+            </relocation>
+            <relocation>
               <pattern>de.tr7zw.changeme.nbtapi</pattern>
-              <shadedPattern>de.tr7zw.nbtapi</shadedPattern>
+              <shadedPattern>me.zodiia.libs.nbtapi</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>net.minikloon.fsmgasm</pattern>
+              <shadedPattern>me.zodiia.libs.fsmgasm</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>net.minikloon.kloggs</pattern>
+              <shadedPattern>me.zodiia.libs.kloggs</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>fr.minuskube.inv</pattern>
+              <shadedPattern>me.zodiia.libs.smartinvs</shadedPattern>
             </relocation>
           </relocations>
-<!--          <artifactSet>-->
-<!--            <includes>-->
-<!--              <include>de.tr7zw:functional-annotations</include>-->
-<!--              <include>com.github.Minikloon:FSMgasm</include>-->
-<!--              <include>com.github.Minikloon:Kloggs</include>-->
-<!--              <include>fr.minuskube.inv:smart-invs</include>-->
-<!--              <include>de.tr7zw:item-nbt-api</include>-->
-<!--            </includes>-->
-<!--          </artifactSet>-->
+          <artifactSet>
+            <includes>
+              <include>de.tr7zw:functional-annotations</include>
+              <include>com.github.Minikloon:FSMgasm</include>
+              <include>com.github.Minikloon:Kloggs</include>
+              <include>fr.minuskube.inv:smart-invs</include>
+              <include>de.tr7zw:item-nbt-api</include>
+            </includes>
+          </artifactSet>
           <filters>
             <filter>
               <artifact>*:*</artifact>
@@ -292,6 +319,23 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
+        <version>1.5.0-dev-100</version>
+        <executions>
+          <execution>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>dokka</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <jdkVersion>11</jdkVersion>
+        </configuration>
       </plugin>
 
       <plugin>
@@ -332,11 +376,16 @@
         </executions>
       </plugin>
 
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>3.0.0-M1</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.1.1</version>
       </plugin>
     </plugins>
   </build>

@@ -6,7 +6,6 @@ import fr.minuskube.inv.content.InventoryContents
 import fr.minuskube.inv.content.InventoryProvider
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
-import org.bukkit.event.inventory.InventoryEvent
 import org.bukkit.event.inventory.InventoryType
 
 class Menu(

@@ -3,10 +3,8 @@ package me.zodiia.api.placeholder
 import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
-import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import java.time.Instant
 import java.util.regex.Pattern
 
 object Placeholders {

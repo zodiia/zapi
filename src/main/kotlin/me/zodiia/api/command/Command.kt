@@ -1,17 +1,11 @@
 package me.zodiia.api.command
 
+import me.zodiia.api.util.addPartialAndFullMatches
 import me.zodiia.api.util.translateColors
-import org.bukkit.Bukkit
-import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.command.TabCompleter
-import org.bukkit.command.Command as BCommand
 import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
-import org.bukkit.util.StringUtil
 import java.time.Instant
-import java.util.Arrays
 
 class Command(dsl: Command.() -> Unit) {
     private val subcommands = hashMapOf<String, Command>()
@@ -49,8 +43,8 @@ class Command(dsl: Command.() -> Unit) {
         permissionExecutor = { ctx ->
             ctx.sender.sendMessage("&cError: Missing permissions.".translateColors())
         }
-        internalErrorExecutor = { ctx, _ ->
-            ctx.sender.sendMessage("&cError: Internal error.".translateColors())
+        internalErrorExecutor = { ctx, th ->
+            ctx.sender.sendMessage("&cError: ${th.message ?: th.javaClass.name}.".translateColors())
         }
         dsl.invoke(this)
     }
@@ -72,16 +66,21 @@ class Command(dsl: Command.() -> Unit) {
         val context = Context(sender, alias, values, this, instant)
 
         try {
-            if (args.isNotEmpty() && subcommands.containsKey(args[0])) {
+            if (args.isNotEmpty()) {
                 val subcommand = findSubcommand(args[0])
 
                 if (subcommand != null) {
-                    subcommands[args[0]]!!.commandExecute(sender, "$alias ${args[0]}", args.copyOfRange(1, args.size), instant)
+                    subcommand.commandExecute(sender, "$alias ${args[0]}", args.copyOfRange(1, args.size), instant)
                     return
                 }
             }
             if (sender is Player && permission != null && !sender.hasPermission(permission!!)) {
                 permissionExecutor(context)
+                return
+            }
+            if (arguments.size < args.size && arguments[arguments.size - 1]?.long == false) {
+                syntaxExecutor(context, -1)
+                return
             }
             for (pair in arguments) {
                 val arg = pair.value.value(pair.key, args)
@@ -102,7 +101,7 @@ class Command(dsl: Command.() -> Unit) {
         val context = Context(sender, alias, values, this, instant)
 
         try {
-            if (args.isNotEmpty()) {
+            if (args.size >= 2) {
                 val subcommand = findSubcommand(args[0])
 
                 if (subcommand != null) {
@@ -112,16 +111,18 @@ class Command(dsl: Command.() -> Unit) {
             if (permission != null && !sender.hasPermission(permission!!)) {
                 return mutableListOf()
             }
-            val argument = getArgument(args.size - 1) ?: return mutableListOf()
-            val possibleValues = argument.get(context)
+            val argument = getArgument(args.size - 1)
+            val possibleValues = argument?.get(context) ?: mutableListOf()
             val finalList = mutableListOf<String>()
 
             for (subcommand in subcommands) {
-                if (subcommand.value.permission != null && sender.hasPermission(subcommand.value.permission!!)) {
+                if ((subcommand.value.permission != null && sender.hasPermission(subcommand.value.permission!!)) ||
+                        subcommand.value.permission == null) {
                     possibleValues.add(subcommand.key)
+                    possibleValues.addAll(subcommand.value.aliases)
                 }
             }
-            StringUtil.copyPartialMatches(args[args.size - 1], possibleValues, finalList)
+            finalList.addPartialAndFullMatches(args[args.size - 1], possibleValues)
             return finalList
         } catch (th: Throwable) {
             internalErrorExecutor(context, th)

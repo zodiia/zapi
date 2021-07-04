@@ -2,7 +2,6 @@ package me.zodiia.api.placeholder
 
 import org.bukkit.entity.Player
 import java.time.Instant
-import java.util.regex.Pattern
 
 class Placeholder(
     val name: String,

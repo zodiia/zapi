@@ -38,3 +38,11 @@ fun String.translateColors(altColorChar: Char = '&'): String {
     }
     return String(chars)
 }
+
+fun MutableCollection<String>.addPartialAndFullMatches(token: String, values: Iterable<String>) {
+    values.forEach {
+        if (it.startsWith(token, true) || it.equals(token, true)) {
+            add(it)
+        }
+    }
+}

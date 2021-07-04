@@ -20,6 +20,9 @@ class Argument(dsl: Argument.() -> Unit) {
     }
 
     internal fun test(context: Context, value: String?): Boolean {
+        if (permission != null && !context.sender.hasPermission(permission!!)) {
+            return false
+        }
         if (value == null) {
             return !required
         }
@@ -33,7 +36,7 @@ class Argument(dsl: Argument.() -> Unit) {
     }
 
     internal fun value(idx: Int, args: Array<out String>): String? {
-        if (args.size <= idx) {
+        if (args.size <= idx || idx < 0) {
             return null
         }
         return if (long) {

@@ -199,6 +199,7 @@ $RECYCLE.BIN/
 
 # IntelliJ
 /out/
+/.run/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -209,3 +210,6 @@ atlassian-ide-plugin.xml
 #Generated Documentation
 doc/
 .checkstyle
+
+# Temporary
+/src/main/kotlin/me/zodiia/api/config2
