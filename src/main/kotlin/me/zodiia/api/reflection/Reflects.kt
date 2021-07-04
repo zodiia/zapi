@@ -1,4 +1,4 @@
-package me.zodiia.api.util
+package me.zodiia.api.reflection
 
 import me.zodiia.api.logger.Console
 import org.bukkit.Bukkit
