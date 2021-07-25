@@ -1,0 +1,45 @@
+complexity:
+  TooManyFunctions:
+    active: false
+
+exceptions:
+  TooGenericExceptionThrown:
+    active: false
+
+performance:
+  SpreadOperator:
+    active: false
+
+style:
+  ReturnCount:
+    max: 4
+    excludeGuardClauses: true
+  MaxLineLength:
+    maxLineLength: 160
+  ThrowsCount:
+    max: 4
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreEnums: true
+    ignoreExtensionFunctions: false
+  ForbiddenComment:
+    values:
+      - 'TODO:'
+      - 'FIXME:'
+      - 'STOPSHIP:'
+      - 'XXX:'
+      - 'HACK:'
+  UnusedImports:
+    active: true
+
+build:
+  maxIssues: 5
+
+console-reports:
+  active: true
+
+output-reports:
+  active: true
+  exclude:
+    - 'XmlOutputReport'
+    - 'SarifOutputReport'

@@ -10,8 +10,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-typealias TaskExecutor<T> = () -> T
-
 object Threads {
     internal val executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()) as ThreadPoolExecutor
     private var syncTask: BukkitTask? = null

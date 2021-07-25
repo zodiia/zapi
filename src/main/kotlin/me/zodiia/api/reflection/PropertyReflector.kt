@@ -10,7 +10,8 @@ class PropertyReflector<T: Any, R: Any>(
     type: KClass<out Any>,
     name: String,
 ) {
-    private val field: KProperty1<T, R> = (type.declaredMemberProperties.find { it.name == name } ?: throw NoSuchFieldException("Property does not exist")) as KProperty1<T, R>
+    private val field: KProperty1<T, R> = (type.declaredMemberProperties.find { it.name == name }
+        ?: throw NoSuchFieldException("Property does not exist")) as KProperty1<T, R>
 
     init {
         field.isAccessible = true

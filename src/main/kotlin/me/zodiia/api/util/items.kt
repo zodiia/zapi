@@ -8,8 +8,9 @@ import org.bukkit.inventory.meta.ItemMeta
 import java.util.regex.Pattern
 
 private val itemFactory = Bukkit.getServer().itemFactory
-const val MAX_LORE_LINE_LENGTH = 300 // FIXME: Dynamic configurations
+const val MAX_LORE_LINE_LENGTH = 300 // OPTIMIZE: Dynamic configurations
 
+@Suppress("NestedBlockDepth")
 fun ItemMeta.parseLore() { // TODO: Refactoring
     val newLore = mutableListOf<String>()
 
@@ -100,26 +101,12 @@ fun getMaterials(pattern: String): Set<Material> {
 }
 
 private object ItemsHelper {
-    val charactersLength = mutableMapOf<Char, Int>()
-
-    init {
-        for (ch in "i.,!:;|".toCharArray()) {
-            charactersLength[ch] = 2
-        }
-        for (ch in "l'`".toCharArray()) {
-            charactersLength[ch] = 3
-        }
-        for (ch in "It[] ".toCharArray()) {
-            charactersLength[ch] = 4
-        }
-        for (ch in "fk()\"*<>²".toCharArray()) {
-            charactersLength[ch] = 5
-        }
-        for (ch in "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghjmnopqrsuvwxyzÆÇÉÈÊËÔÖŒÜàæçéèêëñôöü0123456789/\\?&$%+-=#_".toCharArray()) {
-            charactersLength[ch] = 6
-        }
-        for (ch in "œ~@".toCharArray()) {
-            charactersLength[ch] = 7
-        }
-    }
+    val charactersLength = mutableMapOf(
+        "i.,!:;|".toCharArray().toHashSet() to 2,
+        "l'`".toCharArray().toHashSet() to 3,
+        "It[] ".toCharArray().toHashSet() to 4,
+        "fk()\"*<>²".toCharArray().toHashSet() to 5,
+        "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghjmnopqrsuvwxyzÆÇÉÈÊËÔÖŒÜàæçéèêëñôöü0123456789/\\?&$%+-=#_".toCharArray().toHashSet() to 6,
+        "œ~@".toCharArray().toHashSet() to 7,
+    ).flatten()
 }

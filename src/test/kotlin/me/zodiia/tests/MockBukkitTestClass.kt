@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class MockBukkitTestClass {
+open class MockBukkitTestClass {
     lateinit var server: ServerMock
     lateinit var plugin: ApiPlugin
 

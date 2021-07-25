@@ -7,10 +7,11 @@ fun String.isRegex() = startsWith('/') && endsWith('/')
 
 fun CharArray.match(pattern: CharArray, thisIdx: Int = 0, patternIdx: Int = 0): Boolean {
     if (pattern[patternIdx] == '*') {
-        if (size == thisIdx) {
-            return match(pattern, thisIdx, patternIdx + 1)
+        return if (size == thisIdx) {
+            match(pattern, thisIdx, patternIdx + 1)
+        } else {
+            match(pattern, thisIdx + 1, patternIdx) || match(pattern, thisIdx, patternIdx + 1)
         }
-        return match(pattern, thisIdx + 1, patternIdx) || match(pattern, thisIdx, patternIdx + 1)
     }
     if (size != thisIdx && this[thisIdx] == pattern[patternIdx]) {
         return match(pattern, thisIdx + 1, patternIdx + 1)

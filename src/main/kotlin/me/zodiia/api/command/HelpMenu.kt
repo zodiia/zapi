@@ -14,6 +14,7 @@ class HelpMenu(val name: String, val label: String) {
         commands[command] = description
     }
 
+    @Suppress("NestedBlockDepth")
     fun build(perPage: Int = DEFAULT_CMDS_PER_PAGE) { // TODO: Refactoring
         val totalPages = ceil(commands.size.toDouble() / perPage.toDouble())
         var currentPageIdx = 0

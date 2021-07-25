@@ -1,4 +1,3 @@
 package me.zodiia.api.util
 
-class ItemsTest {
-}
+class ItemsTest

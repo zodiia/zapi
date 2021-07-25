@@ -14,7 +14,7 @@ inline fun <T: Any> notNull(it: T?, f: (it: T) -> Unit) {
 }
 
 fun tryFct(fct: () -> Unit): Throwable? {
-    try { fct() } catch (any: Throwable) { return any }
+    try { fct() } catch (@Suppress("TooGenericExceptionCaught") any: Throwable) { return any }
     return null
 }
 
@@ -27,3 +27,8 @@ fun <T : Any?> ternary(condition: () -> Boolean, trueValue: T, falseValue: T) =
     else falseValue
 
 fun <K, V : Any> Map<K, V>.toPairArray() = map { it.key to it.value }.toTypedArray()
+
+fun <K, C: Collection<K>, V : Any> Map<C, V>.flatten() =
+    flatMap { (keys, value) ->
+        keys.map { it to value }
+    }.toTypedArray().toMap()

@@ -1,6 +1,5 @@
 package me.zodiia.api.data
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.asMono
 import me.zodiia.api.threads.SpigotDispatchers
 import me.zodiia.api.util.toPairArray
@@ -13,7 +12,6 @@ import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
 import reactor.core.publisher.Flux
@@ -52,7 +50,7 @@ abstract class AbstractRepository<I : Comparable<I>, T : Entity<I>>(
         op: SqlExpressionBuilder.() -> Op<Boolean>,
     ): Mono<Long> = monoTransaction {
         val query = entityClass.find(op)
-
+        
         limit?.let { query.limit(it, offset ?: 0L) }
         orderBy?.let { query.orderBy(*it.toPairArray()) }
         query.count()

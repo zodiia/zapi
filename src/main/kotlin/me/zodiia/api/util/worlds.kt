@@ -3,7 +3,6 @@ package me.zodiia.api.util
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.EntityType
-import kotlin.math.abs
 
 private fun dist(a: Double, b: Double): Double {
     return if (a > b) {

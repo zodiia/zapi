@@ -11,8 +11,13 @@ import org.bukkit.event.inventory.InventoryType
 class Menu(
     dsl: Menu.() -> Unit,
 ) {
+    companion object {
+        const val DEFAULT_ROWS = 6
+        const val DEFAULT_COLUMNS = 9
+    }
+
     private val builder = SmartInventory.builder()
-    private val menu: SmartInventory
+    private val smartInventory: SmartInventory
     private var initFct: (Player?, InventoryContents?) -> Unit
     private var updateFct: (Player?, InventoryContents?) -> Unit
     var id: String
@@ -24,9 +29,9 @@ class Menu(
     var type: InventoryType
         get() = throw IllegalStateException("Cannot get the value.")
         set(value) { builder.type(type) }
-    var rows: Int = 6
+    var rows: Int = DEFAULT_ROWS
         set(value) { builder.size(value, columns); field = value }
-    var columns: Int = 9
+    var columns: Int = DEFAULT_COLUMNS
         set(value) { builder.size(rows, value); field = value }
     var closeable: Boolean
         get() = throw IllegalStateException("Cannot get the value.")
@@ -38,7 +43,7 @@ class Menu(
         dsl.invoke(this)
         builder.manager(Menus.inventoryManager)
         builder.provider(asProvider())
-        menu = builder.build()
+        smartInventory = builder.build()
     }
 
     private fun asProvider(): InventoryProvider = object: InventoryProvider {

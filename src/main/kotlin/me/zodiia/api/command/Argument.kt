@@ -26,10 +26,7 @@ class Argument(dsl: Argument.() -> Unit) {
         if (value == null) {
             return !required
         }
-        if (get(context).contains(value)) {
-            return true
-        }
-        if (filters.find { it(value) } != null) {
+        if (get(context).contains(value) || filters.find { it(value) } != null) {
             return true
         }
         return false

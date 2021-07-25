@@ -91,7 +91,7 @@ class Command(dsl: Command.() -> Unit) {
                 }
             }
             executor(context)
-        } catch (th: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") th: Throwable) {
             internalErrorExecutor(context, th)
         }
     }
@@ -124,7 +124,7 @@ class Command(dsl: Command.() -> Unit) {
             }
             finalList.addPartialAndFullMatches(args[args.size - 1], possibleValues)
             return finalList
-        } catch (th: Throwable) {
+        } catch (@Suppress("TooGenericExceptionCaught") th: Throwable) {
             internalErrorExecutor(context, th)
             return mutableListOf()
         }

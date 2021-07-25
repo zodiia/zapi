@@ -214,8 +214,6 @@ class CommandTest: MockBukkitTestClass() {
     @Test
     fun `Should have default executors implementations`() {
         val player = server.addPlayer()
-        val emptyCmd by lazy { server.commandMap.getCommand("empty") ?: throw IllegalStateException() }
-        val defaultCmd by lazy { server.commandMap.getCommand("default") ?: throw IllegalStateException() }
 
         Commands.register("empty", plugin, emptyCommand)
         Commands.register("default", plugin, defaultExecutorsCommand)
