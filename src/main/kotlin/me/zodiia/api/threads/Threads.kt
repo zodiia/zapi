@@ -13,14 +13,10 @@ import java.util.concurrent.TimeUnit
 typealias TaskExecutor<T> = () -> T
 
 object Threads {
-    private val executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()) as ThreadPoolExecutor
+    internal val executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()) as ThreadPoolExecutor
     private var syncTask: BukkitTask? = null
     private val syncTaskQueue: Queue<TaskExecutor<Unit>> = LinkedList()
     private const val TERMINATION_TIMEOUT = 30000L
-
-    init {
-        Threads.startSyncTask(ApiPlugin.plugin)
-    }
 
     init {
         startSyncTask(ApiPlugin.plugin)

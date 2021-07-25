@@ -16,7 +16,7 @@ data class DataSourceConfiguration(
 ) {
     companion object {
         fun fromConfig(config: ConfigurationSection) = DataSourceConfiguration(
-            DataSourceType.valueOf(config.getString("storage-type").orEmpty().toUpperCase()),
+            DataSourceType.valueOf(config.getString("storage-type").orEmpty().uppercase()),
             config.getString("host").orEmpty(),
             config.getString("database").orEmpty(),
             config.getString("username").orEmpty(),

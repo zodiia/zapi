@@ -41,7 +41,7 @@ abstract class DataSourceProvider(
         DataSourceType.MYSQL -> "jdbc:mysql://${config.host}/${config.database}"
         DataSourceType.MARIADB -> "jdbc:mariadb://${config.host}/${config.database}"
         DataSourceType.POSTGRESQL -> "jdbc:postgresql://${config.host}/${config.database}"
-        DataSourceType.SQLSERVER -> "jdbc:sqlserver://${config.host};instance=SQLEXPRESS;databaseName=${config.database}"
+        DataSourceType.SQLSERVER -> "jdbc:sqlserver://${config.host};databaseName=${config.database}"
         DataSourceType.H2 -> "jdbc:h2:file:${File(dataFolder, "database").absolutePath}"
         DataSourceType.SQLITE -> "jdbc:sqlite:${File(dataFolder, "database").absolutePath}"
     }
@@ -55,14 +55,16 @@ abstract class DataSourceProvider(
         DataSourceType.SQLITE -> "org.sqlite.JDBC"
     }
 
-    fun addAdditionalParameters() = when (config.storageType) {
-        DataSourceType.MYSQL, DataSourceType.MARIADB -> {
-            hikariConfig.addDataSourceProperty("cachePrepStmts", "true")
-            hikariConfig.addDataSourceProperty("prepStmtCacheSize", "400")
-            hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
-            hikariConfig.addDataSourceProperty("useServerPrepStmts", "true")
+    fun addAdditionalParameters() {
+        hikariConfig.addDataSourceProperty("cachePrepStmts", "true")
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize", "400")
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
+        when (config.storageType) {
+            DataSourceType.MYSQL, DataSourceType.MARIADB -> {
+                hikariConfig.addDataSourceProperty("useServerPrepStmts", "true")
+            }
+            else -> Unit // TODO: Find optimization parameters for other databases
         }
-        else -> Unit // TODO: Find optimization parameters for other databases
     }
 
     fun <T: Any> transaction(fct: Transaction.() -> T) {

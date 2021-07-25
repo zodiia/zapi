@@ -25,3 +25,5 @@ fun <T : Any?> ternary(condition: Boolean, trueValue: T, falseValue: T) =
 fun <T : Any?> ternary(condition: () -> Boolean, trueValue: T, falseValue: T) =
     if (condition.invoke()) trueValue
     else falseValue
+
+fun <K, V : Any> Map<K, V>.toPairArray() = map { it.key to it.value }.toTypedArray()
