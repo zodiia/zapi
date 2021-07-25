@@ -47,21 +47,21 @@ class Argument(dsl: Argument.() -> Unit) {
     }
 
     /**
-     * Provides a list of static values displayed in the tab completer (Brigadier)
+     * Provide a list of static values displayed in the tab completer (Brigadier)
      */
     fun staticCompleter(dsl: HashSet<Any>.() -> Unit) {
         staticValues.addAll(hashSetOf<Any>().also { dsl(it) }.map { it.toString() })
     }
 
     /**
-     * Provides a dynamic list of values displayed in the tab completer (Brigadier)
+     * Provide a dynamic list of values displayed in the tab completer (Brigadier)
      */
     fun completer(dsl: HashSet<Any>.(Context) -> Unit) {
         providers.add(dsl)
     }
 
     /**
-     * Additional filters to define allowed values
+     * Set an additional filter to define allowed values
      */
     fun filter(dsl: (String) -> Boolean) {
         filters.add(dsl)

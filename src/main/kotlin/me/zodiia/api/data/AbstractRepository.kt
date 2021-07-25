@@ -1,5 +1,7 @@
 package me.zodiia.api.data
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.reactor.asMono
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.sql.Database
@@ -7,32 +9,29 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.emptySized
+import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Suppress("UnnecessaryAbstractClass")
 abstract class AbstractRepository<I : Comparable<I>, T : Entity<I>>(
     protected val entityClass: EntityClass<I, T>,
     protected val db: Database,
 ) {
-    fun findOne(id: I): T? {
-        var res: T? = null
-
-        transaction(db) {
-            res = entityClass.findById(id)
-        }
-        return res
+    suspend fun findOne(id: I): Mono<T> {
+        return suspendedTransactionAsync(Dispatchers.Default, db) {
+            entityClass.findById(id)
+        }.asMono(Dispatchers.Default)
     }
 
-    fun find(op: SqlExpressionBuilder.() -> Op<Boolean>): SizedIterable<T> {
-        var res: SizedIterable<T> = emptySized()
-
-        transaction(db) {
-            res = entityClass.find(op)
-        }
-        return res
+    suspend fun find(op: SqlExpressionBuilder.() -> Op<Boolean>): Flux<T> {
+        return suspendedTransactionAsync(Dispatchers.Default, db) {
+            entityClass.find(op)
+        }.asMono(Dispatchers.Default).flatMapMany { Flux.fromIterable(it) }
     }
 
-    fun findLimit(limit: Int = 0, offset: Long = 0L, op: SqlExpressionBuilder.() -> Op<Boolean>): SizedIterable<T> {
+    suspend fun findLimit(limit: Int = 0, offset: Long = 0L, op: SqlExpressionBuilder.() -> Op<Boolean>): SizedIterable<T> {
         var res: SizedIterable<T> = emptySized()
 
         transaction(db) {
@@ -40,4 +39,6 @@ abstract class AbstractRepository<I : Comparable<I>, T : Entity<I>>(
         }
         return res
     }
+
+//    protected suspend fun suspendTransaction(op: Transaction.() -> T) {}
 }

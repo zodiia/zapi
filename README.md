@@ -4,18 +4,55 @@ ZApi is a Minecraft library aimed at saving time when developing Minecraft plugi
 
 It contains multiple sets of features, each related to a specific aspect of the Spigot API, of a library, or of the game.
 
-## Planned features
+## Current tasks
 
-| Feature | Delivery version | Current state |
-| :---: | :---: | :---: |
-| Commands API | `5.0` | Under testing |
-| Threads | `5.0` | Under testing |
-| PlaceholderAPI integration | `5.0` | Under testing |
-| Menu API | `5.0` | Under development |
-| Vault integration | `5.0` | Under testing |
-| Scheduler API | `5.0` | Under testing |
-| Database connections | `5.0` | Under development |
-| Databases (with SQL engine) | `N/A` | Planned |
-| kotlinx.serialization engine for databases | `N/A` | Planned |
-| MongoDB engine for databases | `N/A` | Planned |
-| Logging API rework | `N/A` | Planned |
+- [ ] Commands API - ``BETA``
+    - [x] Implementation
+    - [x] KDoc
+    - [ ] Documentation
+    - [x] Unit tests
+- [ ] Threads API - ``EXPERIMENTAL``
+    - [x] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] PlaceholderAPI integration - ``EXPERIMENTAL``
+    - [x] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Vault integration - ``EXPERIMENTAL``
+    - [x] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Menu API - ``EXPERIMENTAL``
+    - [x] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Scheduler API - ``EXPERIMENTAL``
+    - [x] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Database API - ``EXPERIMENTAL``
+    - [x] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Logging API - ``N/A``
+    - [ ] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Events API - ``N/A``
+    - [ ] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
+- [ ] Items API - ``N/A``
+    - [ ] Implementation
+    - [ ] KDoc
+    - [ ] Documentation
+    - [ ] Unit tests
