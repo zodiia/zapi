@@ -1,14 +1,14 @@
 package me.zodiia.api
 
+import me.zodiia.api.config.KotlinConfigRealm
+import me.zodiia.api.plugins.KotlinPlugin
 import org.bukkit.plugin.PluginDescriptionFile
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import java.io.File
 
-/**
- *
- */
-class ApiPlugin: JavaPlugin {
+class ApiPlugin: KotlinPlugin {
+    override val configRealm: KotlinConfigRealm = KotlinConfigRealm(this)
+
     constructor() : super()
     constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File) : super(
         loader, description, dataFolder, file,
@@ -19,12 +19,8 @@ class ApiPlugin: JavaPlugin {
     }
 
     companion object {
-        private var constructedPlugin: JavaPlugin? = null
-        internal var env = Env.PRODUCTION
+        private var constructedPlugin: KotlinPlugin? = null
 
         val plugin by lazy { constructedPlugin ?: getProvidingPlugin(ApiPlugin::class.java) }
-
     }
-
-    internal enum class Env { TEST, DEV, PRODUCTION }
 }

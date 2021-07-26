@@ -5,33 +5,15 @@ import com.google.gson.JsonParser
 import org.bukkit.ChatColor
 import java.io.File
 
-class I18nLanguage(val language: String, file: File) {
+class I18nLanguage(val language: String, values: Map<String, String>) {
     private val keys = mutableMapOf<String, String>()
     private val multilineKeys = mutableMapOf<String, List<String>>()
-    val json: JsonObject = JsonParser().parse(file.readText()).asJsonObject
 
     init {
-        parseJsonSection(json)
+        values.map { keys[it.key] = it.value }
     }
 
-    private fun parseJsonSection(section: JsonObject, key: String = "") {
-        fun makeKey(with: String) = "${if (key != "") "." else ""}$with"
-
-        section.entrySet().forEach { entry ->
-            if (entry.value.isJsonObject) {
-                parseJsonSection(entry.value.asJsonObject, makeKey(entry.key))
-            } else if (entry.value.isJsonArray) {
-                val text = mutableListOf<String>()
-
-                entry.value.asJsonArray.forEach { elem ->
-                    text.add(elem.asString)
-                }
-                multilineKeys[makeKey(entry.key)] = text
-            } else {
-                keys[makeKey(entry.key)] = entry.value.asString
-            }
-        }
-    }
+    operator fun get(key: String): String = get(key, emptyMap())
 
     fun get(key: String, args: Map<String, String>): String {
         var line = keys[key] ?: return ""

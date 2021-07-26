@@ -1,5 +1,8 @@
 package me.zodiia.api.logger
 
+import me.zodiia.api.timings.Timings
+import me.zodiia.api.timings.TimingsCapture
+import me.zodiia.api.timings.TimingsRange
 import me.zodiia.api.util.nextString
 import org.bukkit.Bukkit
 import java.util.concurrent.ThreadLocalRandom
@@ -9,6 +12,8 @@ open class LoggerWrapper(
     private val logger: Logger,
 ) {
     private val timers = mutableMapOf<String, Long>()
+    private val counters = mutableMapOf<String, Long>()
+    private val timings = mutableMapOf<String, TimingsCapture>()
 
     fun print(vararg obj: Any) {
         obj.forEach {
@@ -49,7 +54,7 @@ open class LoggerWrapper(
         }
     }
 
-    fun timeEnd(id: String) {
+    fun timeLog(id: String) {
         val endTime = System.nanoTime()
         val startTime: Long?
 
@@ -63,6 +68,29 @@ open class LoggerWrapper(
         log("$id: ${millis}ms.")
     }
 
+    fun timeEnd(id: String) {
+        timeLog(id)
+        synchronized(timers) {
+            timers.remove(id)
+        }
+    }
+
+    fun count(id: String) {
+        val count: Long
+        synchronized(counters) {
+            count = counters[id] ?: 0
+        }
+
+        logger.info("$id: Called ${count + 1} times.")
+        counters[id] = count + 1
+    }
+
+    fun countReset(id: String) {
+        synchronized(counters) {
+            counters.remove(id)
+        }
+    }
+
     fun trace() {
         val trace = Thread.currentThread().stackTrace
 
@@ -70,6 +98,32 @@ open class LoggerWrapper(
         trace.forEach {
             log("\t$it")
         }
+    }
+
+    fun timingsCapture() {
+        val capture = Timings.capture()
+
+        log(*capture.toString().lines().toTypedArray())
+    }
+
+    fun timingsStart(id: String) {
+        val capture = Timings.capture()
+
+        synchronized(timings) {
+            timings[id] = capture
+        }
+    }
+
+    fun timingsEnd(id: String) {
+        val capture = Timings.capture()
+        val start: TimingsCapture
+
+        synchronized(timings) {
+            start = timings[id] ?: throw IllegalStateException()
+        }
+        val range = TimingsRange(start, capture)
+
+        log(*range.toString().lines().toTypedArray())
     }
 
     companion object {

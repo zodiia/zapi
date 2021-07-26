@@ -1,6 +1,8 @@
 package me.zodiia.api.command
 
 import me.zodiia.api.ApiPlugin
+import me.zodiia.api.plugins.EnvironmentMode
+import me.zodiia.api.plugins.KotlinPlugin
 import me.zodiia.api.reflection.PropertyInjector
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandMap
@@ -8,7 +10,7 @@ import org.bukkit.plugin.Plugin
 
 object Commands {
     private val commandMap by PropertyInjector<CommandMap>(
-        if (ApiPlugin.env == ApiPlugin.Env.TEST)
+        if (KotlinPlugin.envMode == EnvironmentMode.TEST)
             Bukkit.getServer()
         else
             Bukkit.getPluginManager(),

@@ -12,6 +12,6 @@ class MethodInjector<R: Any>(
 ) {
     private val reflector = MethodReflector<Any, R>(type, name, *parameters)
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): BoundFunction<R> =
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): FunctionBinding<R> =
         reflector[from]
 }

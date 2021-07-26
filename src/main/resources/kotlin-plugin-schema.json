@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON schema for zApi Kotlin plugins.",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "dependency": {
+      "": "",
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "https?://[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b[-a-zA-Z0-9()@:%_+.~#?&/=]*"
+    }
+  },
+  "required": ["minecraftVersion"],
+  "properties": {
+    "pluginDependencies": {
+      "description": "List of required plugin dependencies, with specific versions.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "description": "A required plugin dependency. More information about the version range format: https://github.com/npm/node-semver."
+      }
+    },
+    "softPluginDependencies": {
+      "description": "List of optional plugin dependencies, with specific versions.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "description": "An optional plugin dependency. More information about the version range format: https://github.com/npm/node-semver."
+      }
+    },
+    "minecraftVersion": {
+      "description": "Required Minecraft version to run the plugin. More information about the version range format: https://github.com/npm/node-semver.",
+      "type": "string"
+    },
+    "files": {
+      "description": "List of configuration files (or any other type) to save into the plugin's directory.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "urls": {
+      "description": "A list of URLs for this project.",
+      "type": "object",
+      "properties": {
+        "bugs": {
+          "description": "URL to a bug report page.",
+          "$ref": "#/definitions/url"
+        },
+        "homepage": {
+          "description": "URL to the project's homepage.",
+          "$ref": "#/definitions/url"
+        },
+        "docs": {
+          "description": "URL to the project's documentation.",
+          "$ref": "#/definitions/url"
+        },
+        "repository": {
+          "description": "URL to the project's repository.",
+          "$ref": "#/definitions/url"
+        }
+      }
+    },
+    "spigotId": {
+      "description": "Spigot project ID.",
+      "type": "number"
+    }
+  }
+}

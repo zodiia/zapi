@@ -1,0 +1,16 @@
+{
+  "minecraftVersion": ">1.16.5",
+  "pluginDependencies": {},
+  "softPluginDependencies": {
+    "PlaceholderAPI": ">=2.2",
+    "Vault": ">=1.6.6"
+  },
+  "files": [],
+  "spigotId": -1,
+  "urls": {
+    "bugs": "https://gitlab.com/manon.grivot/zapi/-/issues",
+    "docs": "https://zodiia.moe/zapi/docs",
+    "homepage": "https://zodiia.moe/zapi",
+    "repository": "https://gitlab.com/manon.grivot/zapi"
+  }
+}

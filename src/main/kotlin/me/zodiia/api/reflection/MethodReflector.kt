@@ -32,5 +32,5 @@ class MethodReflector<T: Any, R: Any>(
         return declaredFunctions.find { it.parameters == parameters.toList() } as? KFunction<R> ?: throw NoSuchMethodException("Could not find method")
     }
 
-    operator fun get(from: T): BoundFunction<R> = method.bind(from)
+    operator fun get(from: T): FunctionBinding<R> = method.bind(from)
 }
