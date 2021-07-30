@@ -11,9 +11,27 @@
     "url": {
       "type": "string",
       "pattern": "https?://[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b[-a-zA-Z0-9()@:%_+.~#?&/=]*"
+
+    },
+    "defaultPermission": {
+      "enum": [true, false, "op", "not-op"]
+    },
+    "permission": {
+      "description": "A permission node.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/defaultPermission"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/permission"
+          }
+        }
+      ]
     }
   },
-  "required": ["minecraftVersion"],
+  "required": ["apiVersion", "minecraftVersion", "main"],
   "properties": {
     "pluginDependencies": {
       "description": "List of required plugin dependencies, with specific versions.",
@@ -67,6 +85,37 @@
     "spigotId": {
       "description": "Spigot project ID.",
       "type": "number"
+    },
+    "main": {
+      "description": "Main plugin class.",
+      "type": "string"
+    },
+    "description": {
+      "description": "Plugin's description.",
+      "type": "string"
+    },
+    "authors": {
+      "description": "List of plugin's authors.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "load": {
+      "description": "The phase of server-startup this plugin will load during.",
+      "type": "string",
+      "enum": ["STARTUP", "POSTWORLD"]
+    },
+    "apiVersion": {
+      "description": "Gives the API version which this plugin is designed to support.",
+      "type": "string",
+      "pattern": "^1\\.\\d+$"
+    },
+    "permissions": {
+      "$ref": "#/definitions/permission"
+    },
+    "defaultPermission": {
+      "$ref": "#/definitions/defaultPermission"
     }
   }
 }

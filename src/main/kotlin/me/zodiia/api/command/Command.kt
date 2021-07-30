@@ -7,7 +7,10 @@ import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
 import java.time.Instant
 
-class Command(dsl: Command.() -> Unit) {
+class Command(
+    parent: Command? = null,
+    dsl: Command.() -> Unit,
+) {
     private val subcommands = hashMapOf<String, Command>()
     private val arguments = sortedMapOf<Int, Argument>()
     private var executor: ((Context) -> Unit)
@@ -17,19 +20,31 @@ class Command(dsl: Command.() -> Unit) {
     private var permissionExecutor: ((Context) -> Unit)
     private var internalErrorReassigned = false
     private var internalErrorExecutor: ((Context, Throwable) -> Unit)
+    var parent = parent
+        private set
 
     /**
-     * Defines the permission required to use this command
+     * Controls which permission is required to use this command.
+     *
+     * Default value: none
      */
     var permission: String? = null
 
     /**
-     * A list of aliases for this command
+     * Controls which aliases this command has.
+     *
+     * An alias is another syntax to use the base command.
+     *
+     * Default value: none
      */
-    var aliases: Collection<String> = hashSetOf()
+    var aliases: Collection<String> = emptySet()
 
     /**
-     * Description of the command
+     * Controls the description of the command.
+     *
+     * This description will be used in help commands. It should provide information about what the command does and how to use it.
+     *
+     * Default value: none
      */
     var description: String? = null
 
@@ -160,19 +175,19 @@ class Command(dsl: Command.() -> Unit) {
     }
 
     /**
-     * Create a new subcommand
+     * Create a new subcommand.
      *
      * @param name Primary name (syntax) of the subcommand
      * @param dsl Subcommand definition
      */
     fun subcommand(name: String, dsl: Command.() -> Unit) {
-        val cmd = Command(dsl)
+        val cmd = Command(this, dsl)
 
         subcommand(name, cmd)
     }
 
     /**
-     * Create a new subcommand from an already defined object
+     * Create a new subcommand from an already defined object.
      *
      * @param name Primary name (syntax) of the command
      * @param cmd Subcommand object
@@ -187,11 +202,12 @@ class Command(dsl: Command.() -> Unit) {
         if (!cmd.syntaxReassigned) {
             cmd.syntaxExecutor = syntaxExecutor
         }
+        cmd.parent = this
         subcommands[name] = cmd
     }
 
     /**
-     * Create a new command argument
+     * Create a new command argument.
      *
      * @param idx Argument index (always starts at 0)
      * @param dsl Argument definition
@@ -201,7 +217,7 @@ class Command(dsl: Command.() -> Unit) {
     }
 
     /**
-     * Add a new command argument from an already defined object
+     * Add a new command argument from an already defined object.
      *
      * @param idx Argument index (always starts at 0)
      * @param arg Argument object
@@ -211,14 +227,14 @@ class Command(dsl: Command.() -> Unit) {
     }
 
     /**
-     * Set this command's executor
+     * Set this command's executor.
      */
     fun executor(fct: (Context) -> Unit) {
         executor = fct
     }
 
     /**
-     * Set this command's invalid permission executor
+     * Set this command's invalid permission executor.
      */
     fun permissionExecutor(fct: (Context) -> Unit) {
         permissionReassigned = true
@@ -226,7 +242,7 @@ class Command(dsl: Command.() -> Unit) {
     }
 
     /**
-     * Set this command's invalid syntax executor
+     * Set this command's invalid syntax executor.
      */
     fun syntaxExecutor(fct: (Context, Int) -> Unit) {
         syntaxReassigned = true
@@ -234,7 +250,7 @@ class Command(dsl: Command.() -> Unit) {
     }
 
     /**
-     * Set this command's internal error executor
+     * Set this command's internal error executor.
      */
     fun internalErrorExecutor(fct: (Context, Throwable) -> Unit) {
         internalErrorReassigned = true

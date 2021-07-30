@@ -21,15 +21,15 @@ abstract class KotlinPlugin: JavaPlugin {
     internal var updates: String? = null
     abstract val configRealm: KotlinConfigRealm
     val kotlinDescription: KotlinPluginDescription =
-        ConfigLoader().loadConfigOrThrow(Paths.get(javaClass.getResource("kotlinPlugin.json")?.toURI()
-            ?: throw FileNotFoundException("Could not find Kotlin plugin file.")))
+        ConfigLoader().loadConfigOrThrow(Paths.get(javaClass.getResource("plugin.json")?.toURI()
+            ?: throw FileNotFoundException("Could not find Kotlin plugin file (plugin.json).")))
 
     constructor(): super()
     constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File): super(
         loader, description, dataFolder, file,
     )
 
-    final override fun onLoad() {
+    override fun onLoad() {
         setEnvMode()
         checkMinecraftVersion()
         try {
@@ -40,12 +40,12 @@ abstract class KotlinPlugin: JavaPlugin {
         }
     }
 
-    final override fun onEnable() {
+    override fun onEnable() {
         saveResources()
         Bukkit.getScheduler().runTask(this, KotlinPluginUpdateChecker(this))
     }
 
-    final override fun onDisable() {
+    override fun onDisable() {
 
     }
 

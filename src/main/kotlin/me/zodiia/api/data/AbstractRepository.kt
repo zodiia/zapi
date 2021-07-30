@@ -50,7 +50,7 @@ abstract class AbstractRepository<I : Comparable<I>, T : Entity<I>>(
         op: SqlExpressionBuilder.() -> Op<Boolean>,
     ): Mono<Long> = monoTransaction {
         val query = entityClass.find(op)
-        
+
         limit?.let { query.limit(it, offset ?: 0L) }
         orderBy?.let { query.orderBy(*it.toPairArray()) }
         query.count()

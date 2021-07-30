@@ -4,16 +4,19 @@ import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.ConfigSource
 import com.sksamuel.hoplite.json.JsonPropertySource
 import me.zodiia.api.config.decoders.FlatStringMapDecoder
+import me.zodiia.api.i18n.I18n
 import me.zodiia.api.plugins.KotlinPlugin
 import java.io.File
 import kotlin.reflect.KClass
 
 open class KotlinConfigRealm(
-    private val plugin: KotlinPlugin
+    private val plugin: KotlinPlugin,
+    defaultI18nId: String = "en",
 ) {
-    private data class InnerLanguage(val values: Map<String, String>)
+    private data class InnerLanguage(val values: Map<String, Array<String>>)
 
-    private val configLoader = ConfigLoader()
+    private val configLoader = ConfigLoader.Builder().addDecoder(FlatStringMapDecoder()).build()
+    val i18n = I18n(defaultI18nId)
 
     fun <T : Any> load(path: String, type: KClass<T>): T {
         val sources = ConfigSource.fromFiles(listOf(File(plugin.dataFolder, path)))
@@ -38,7 +41,7 @@ open class KotlinConfigRealm(
             val loader = ConfigLoader.Builder().addDecoder(FlatStringMapDecoder()).addSource(JsonPropertySource("{\"values\"${content}}")).build()
             val lang = loader.loadConfigOrThrow<InnerLanguage>()
 
-
+            i18n.add(it.nameWithoutExtension, lang.values)
         }
     }
 }

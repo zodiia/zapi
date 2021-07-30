@@ -1,6 +1,7 @@
 package me.zodiia.api
 
 import me.zodiia.api.config.KotlinConfigRealm
+import me.zodiia.api.hooks.useI18n
 import me.zodiia.api.plugins.KotlinPlugin
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPluginLoader

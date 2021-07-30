@@ -1,9 +1,11 @@
 {
   "minecraftVersion": ">1.16.5",
+  "apiVersion": "1.17",
+  "main": "me.zodiia.api.ApiPlugin",
   "pluginDependencies": {},
   "softPluginDependencies": {
-    "PlaceholderAPI": ">=2.2",
-    "Vault": ">=1.6.6"
+    "PlaceholderAPI": ">=2.9",
+    "Vault": ">=1.7.2"
   },
   "files": [],
   "spigotId": -1,
@@ -12,5 +14,15 @@
     "docs": "https://zodiia.moe/zapi/docs",
     "homepage": "https://zodiia.moe/zapi",
     "repository": "https://gitlab.com/manon.grivot/zapi"
-  }
+  },
+  "permissions": {
+    "api.*": {
+      "api.test": "op"
+    },
+    "api": true
+  },
+  "defaultPermission": "op",
+  "description": "zApi is an utility API for all of Zodiia's plugins.",
+  "authors": ["Zodiia"],
+  "load": "STARTUP"
 }

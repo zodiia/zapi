@@ -1,50 +1,60 @@
 package me.zodiia.api.i18n
 
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
+import me.zodiia.api.util.translateColors
 import org.bukkit.ChatColor
-import java.io.File
 
-class I18nLanguage(val language: String, values: Map<String, String>) {
-    private val keys = mutableMapOf<String, String>()
-    private val multilineKeys = mutableMapOf<String, List<String>>()
-
-    init {
-        values.map { keys[it.key] = it.value }
+class I18nLanguage(val language: String, private val translations: Map<String, Array<String>>) {
+    companion object {
+        const val missingTranslations = "#MISSING_TRANSLATIONS#"
     }
 
-    operator fun get(key: String): String = get(key, emptyMap())
+    fun get(key: String, vararg args: Pair<String, String>): String {
+        var line = translations[key]?.getOrNull(0) ?: return missingTranslations
+
+        args.forEach { line = line.replace("\$${it.first}", it.second) }
+        return line.translateColors()
+    }
 
     fun get(key: String, args: Map<String, String>): String {
-        var line = keys[key] ?: return ""
+        var line = translations[key]?.getOrNull(0) ?: return missingTranslations
 
-        args.forEach { arg ->
-            line = line.replace("\$${arg.key}", arg.value)
-        }
-        return ChatColor.translateAlternateColorCodes('&', line)
+        args.forEach { line = line.replace("\$${it.key}", it.value) }
+        return line.translateColors()
     }
 
-    fun getMultiple(keys: List<String>, args: Map<String, String>): List<String> {
-        return keys.map { key ->
-            var line = this.keys[key] ?: return@map ""
+    fun getMultiple(keys: Array<String>, vararg args: Pair<String, String>) = Array(keys.size) { idx ->
+        var line = translations[keys[idx]]?.getOrNull(0) ?: missingTranslations
 
-            args.forEach { arg ->
-                line = line.replace("\$${arg.key}", arg.value)
-            }
-            return@map line
+        args.forEach { line = line.replace("\$${it.first}", it.second) }
+        line
+    }
+
+    fun getMultiple(keys: Array<String>, args: Map<String, String>) = Array(keys.size) { idx ->
+        var line = translations[keys[idx]]?.getOrNull(0) ?: missingTranslations
+
+        args.forEach { line = line.replace("\$${it.key}", it.value) }
+        line
+    }
+
+    fun getArray(key: String, vararg args: Pair<String, String>): Array<String> {
+        val lines = translations[key] ?: return arrayOf(missingTranslations)
+
+        return Array(lines.size) { idx ->
+            var line = lines[idx]
+
+            args.forEach { line = line.replace("\$${it.first}", it.second) }
+            line
         }
     }
 
-    fun getArray(key: String, args: Map<String, String>): List<String> {
-        val lines = multilineKeys[key] ?: return listOf()
+    fun getArray(key: String, args: Map<String, String>): Array<String> {
+        val lines = translations[key] ?: return arrayOf(missingTranslations)
 
-        return lines.map { line ->
-            var newLine = line
+        return Array(lines.size) { idx ->
+            var line = lines[idx]
 
-            args.forEach { arg ->
-                newLine = line.replace("\$${arg.key}", arg.value)
-            }
-            return@map ChatColor.translateAlternateColorCodes('&', newLine)
+            args.forEach { line = line.replace("\$${it.key}", it.value) }
+            line
         }
     }
 }

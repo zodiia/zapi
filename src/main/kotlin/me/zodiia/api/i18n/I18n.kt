@@ -1,34 +1,37 @@
 package me.zodiia.api.i18n
 
+import me.zodiia.api.exceptions.MissingLanguageException
 import java.io.File
+import kotlin.properties.Delegates
 
-object I18n {
+open class I18n(defaultId: String) {
     private val languages = mutableSetOf<I18nLanguage>()
-    private var current = "en"
-    private var currentI18n: I18nLanguage? = null
+    private var current: I18nLanguage? = null
+    var currentId = defaultId
 
+    @Throws(MissingLanguageException::class)
     fun get(language: String): I18nLanguage {
         languages.forEach {
             if (it.language == language) {
                 return it
             }
         }
-        return get(current)
+        throw MissingLanguageException(language)
     }
 
-    fun add(language: String, file: File): I18nLanguage {
-        val lang = I18nLanguage(language, file)
+    fun add(language: String, map: Map<String, Array<String>>): I18nLanguage {
+        val lang = I18nLanguage(language, map)
 
         languages.add(lang)
         return lang
     }
 
-    fun getCurrent(): I18nLanguage {
-        return currentI18n!!
-    }
+    @Throws(MissingLanguageException::class)
+    fun getCurrent(): I18nLanguage = current ?: throw MissingLanguageException(currentId)
 
+    @Throws(MissingLanguageException::class)
     fun setCurrent(key: String) {
-        current = key
-        currentI18n = get(current)
+        currentId = key
+        current = get(currentId)
     }
 }
