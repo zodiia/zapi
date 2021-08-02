@@ -1,5 +1,7 @@
 package me.zodiia.api.logger
 
+import me.zodiia.api.plugins.EnvironmentMode
+import me.zodiia.api.plugins.KotlinPlugin
 import me.zodiia.api.timings.Timings
 import me.zodiia.api.timings.TimingsCapture
 import me.zodiia.api.timings.TimingsRange
@@ -46,6 +48,17 @@ open class LoggerWrapper(
         th.printStackTrace()
         return id
     }
+
+    fun debug(vararg obj: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+        obj.forEach {
+            logger.info("[DEBUG] $it")
+        }
+    }
+
+    fun isDebugEnabled() = KotlinPlugin.envMode != EnvironmentMode.PRODUCTION
 
     fun time(id: String) {
         synchronized(timers) {

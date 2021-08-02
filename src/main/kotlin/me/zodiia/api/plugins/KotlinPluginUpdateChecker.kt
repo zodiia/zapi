@@ -11,6 +11,7 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.vdurmont.semver4j.Semver
 import me.zodiia.api.logger.Console
+import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
 import reactor.netty.http.client.HttpClient
 import java.lang.reflect.Type
@@ -25,7 +26,8 @@ class KotlinPluginUpdateChecker(
     }
 
     override fun run() {
-        if (plugin.kotlinDescription.spigotId <= 0) {
+        if (plugin.getKotlinDescription().spigotId <= 0) {
+            Console.debug("Spigot ID is not set. Skipping update checking.")
             return
         }
 
@@ -33,14 +35,23 @@ class KotlinPluginUpdateChecker(
 
         HttpClient
             .create()
-            .baseUrl("${API_URL}?action=${GET_RESOURCE_ACTION}&id=${plugin.kotlinDescription.spigotId}")
+            .baseUrl("${API_URL}?action=${GET_RESOURCE_ACTION}&id=${plugin.getKotlinDescription().spigotId}#")
             .get()
             .responseContent()
             .aggregate()
+            .flatMap {
+                val str = StringBuilder()
+
+                it.forEachByte { b ->
+                    str.append(Char(b.toInt()))
+                    true
+                }
+                Mono.just(str.toString())
+            }
             .map {
-                val json = JsonParser().parse(it.array().toString()).asJsonObject
+                val json = JsonParser().parse(it).asJsonObject
                 val lastVersion = json["current_version"].asString
-                val semver = Semver(lastVersion)
+                val semver = Semver(lastVersion, Semver.SemverType.NPM)
 
                 if (semver.isGreaterThan(plugin.description.version)) {
                     plugin.updates = lastVersion

@@ -25,17 +25,17 @@ class Menu(
         set(value) { builder.id(value) }
     var title: String
         get() = throw IllegalStateException("Cannot get the value.")
-        set(value) { builder.title(title) }
+        set(value) { builder.title(value) }
     var type: InventoryType
         get() = throw IllegalStateException("Cannot get the value.")
-        set(value) { builder.type(type) }
+        set(value) { builder.type(value) }
     var rows: Int = DEFAULT_ROWS
         set(value) { builder.size(value, columns); field = value }
     var columns: Int = DEFAULT_COLUMNS
         set(value) { builder.size(rows, value); field = value }
     var closeable: Boolean
         get() = throw IllegalStateException("Cannot get the value.")
-        set(value) { builder.closeable(closeable) }
+        set(value) { builder.closeable(value) }
 
     init {
         initFct = { _, _ -> }

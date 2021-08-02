@@ -1,6 +1,5 @@
 package me.zodiia.api.plugins
 
-import com.sksamuel.hoplite.ConfigLoader
 import com.vdurmont.semver4j.Semver
 import com.vdurmont.semver4j.SemverException
 import me.zodiia.api.config.KotlinConfigRealm
@@ -10,8 +9,9 @@ import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import java.io.File
-import java.io.FileNotFoundException
-import java.nio.file.Paths
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 abstract class KotlinPlugin: JavaPlugin {
     companion object {
@@ -20,9 +20,8 @@ abstract class KotlinPlugin: JavaPlugin {
 
     internal var updates: String? = null
     abstract val configRealm: KotlinConfigRealm
-    val kotlinDescription: KotlinPluginDescription =
-        ConfigLoader().loadConfigOrThrow(Paths.get(javaClass.getResource("plugin.json")?.toURI()
-            ?: throw FileNotFoundException("Could not find Kotlin plugin file (plugin.json).")))
+
+    private var internalKotlinDescription: KotlinPluginDescription? = null
 
     constructor(): super()
     constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File): super(
@@ -46,16 +45,25 @@ abstract class KotlinPlugin: JavaPlugin {
     }
 
     override fun onDisable() {
-
+        // Nothing... at the moment
     }
 
     final override fun getConfig(): Nothing = throw IllegalStateException("Config file provided from Bukkit is not supported. Please use KotlinPlugin#configRealm")
 
+    fun getKotlinDescription() = internalKotlinDescription ?: throw IllegalStateException("Kotlin plugin description (kotlinDescription) block is missing.")
+
+    protected fun kotlinDescription(dsl: KotlinPluginDescription.Builder.() -> Unit) {
+        val builder = KotlinPluginDescription.Builder()
+
+        dsl(builder)
+        internalKotlinDescription = builder.build()
+    }
+
     private fun checkMinecraftVersion() {
-        if (!checkVersionRange(kotlinDescription.minecraftVersion, Bukkit.getVersion())) {
+        if (!checkVersionRange(getKotlinDescription().minecraftVersion, Bukkit.getBukkitVersion())) {
             Console.error(
-                "Server's Minecraft version is incompatible with this plugin.",
-                "Please update to a Minecraft version that satisfies this requirement: ${kotlinDescription.minecraftVersion}"
+                "This server's Minecraft version is incompatible with this plugin.",
+                "Please update to a Minecraft version that satisfies this requirement: ${getKotlinDescription().minecraftVersion}"
             )
             throw IllegalStateException("Server's Minecraft version is incompatible with this plugin.")
         }
@@ -64,7 +72,7 @@ abstract class KotlinPlugin: JavaPlugin {
     private fun checkRequiredPluginDependencies() {
         val missingPlugins = hashMapOf<String, String>()
 
-        kotlinDescription.pluginDependencies?.forEach {
+        getKotlinDescription().pluginDependencies.forEach {
             if (Bukkit.getPluginManager().getPlugin(it.key) == null) {
                 missingPlugins[it.key] = it.value
             }
@@ -84,12 +92,12 @@ abstract class KotlinPlugin: JavaPlugin {
     private fun checkPluginDependenciesVersions() {
         val invalidVersions = hashMapOf<String, Pair<String, String>>()
 
-        kotlinDescription.pluginDependencies?.forEach {
+        getKotlinDescription().pluginDependencies.forEach {
             if (!checkVersionRange(it.value, Bukkit.getPluginManager().getPlugin(it.key)!!.description.version)) {
                 invalidVersions[it.key] = it.value to Bukkit.getPluginManager().getPlugin(it.key)!!.description.version
             }
         }
-        kotlinDescription.softPluginDependencies?.forEach {
+        getKotlinDescription().softPluginDependencies.forEach {
             if (Bukkit.getPluginManager().getPlugin(it.key) == null) {
                 return@forEach
             }
@@ -120,7 +128,7 @@ abstract class KotlinPlugin: JavaPlugin {
                 "You are running a development version of ${description.name}. Please be aware that unknown bugs may occur.",
                 "The author of this plugin is not responsible for any damage to your server because of bugs from this plugin."
             )
-            kotlinDescription.urls?.bugs?.let {
+            getKotlinDescription().urls.bugs?.let {
                 Console.warn("Please report any bug you may find to ${it}.")
             }
             envMode = EnvironmentMode.DEVELOPMENT
@@ -128,8 +136,19 @@ abstract class KotlinPlugin: JavaPlugin {
     }
 
     private fun saveResources() {
-        kotlinDescription.files?.forEach {
-            // Write files
+        getKotlinDescription().files.forEach {
+            val newFile = File(dataFolder, it)
+            if (newFile.exists()) {
+                return@forEach
+            }
+            newFile.parentFile.mkdirs()
+
+            val stream = javaClass.getResourceAsStream("/$it") ?: return@forEach
+            val output: OutputStream = FileOutputStream(newFile)
+            val buffer = ByteArray(stream.available())
+
+            stream.read(buffer)
+            output.write(buffer)
         }
     }
 

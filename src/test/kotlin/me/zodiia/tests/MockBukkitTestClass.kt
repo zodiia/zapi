@@ -3,6 +3,8 @@ package me.zodiia.tests
 import be.seeseemelk.mockbukkit.MockBukkit
 import be.seeseemelk.mockbukkit.ServerMock
 import me.zodiia.api.ApiPlugin
+import me.zodiia.api.plugins.EnvironmentMode
+import me.zodiia.api.plugins.KotlinPlugin
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -16,7 +18,7 @@ open class MockBukkitTestClass {
     fun setup() {
         server = MockBukkit.mock()
         plugin = MockBukkit.load(ApiPlugin::class.java)
-        ApiPlugin.env = ApiPlugin.Env.TEST
+        KotlinPlugin.envMode = EnvironmentMode.TEST
     }
 
     @AfterAll
