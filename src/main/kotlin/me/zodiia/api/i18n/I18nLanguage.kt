@@ -57,4 +57,11 @@ class I18nLanguage(val language: String, private val translations: Map<String, A
             line
         }
     }
+
+    fun getKeys(key: String, deep: Boolean = false): Array<String> = translations
+        .filterKeys {
+            !(!it.startsWith("$key.") || (deep && it.substring(key.length + 1).contains('.')))
+        }
+        .keys
+        .toTypedArray()
 }

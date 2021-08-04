@@ -175,6 +175,16 @@ class Command(
     }
 
     /**
+     * Execute the internal error executor for a given context and error.
+     *
+     * @param context Context of the error
+     * @param error Thrown error
+     */
+    fun internalError(context: Context, error: Throwable) {
+        internalErrorExecutor.invoke(context, error)
+    }
+
+    /**
      * Create a new subcommand.
      *
      * @param name Primary name (syntax) of the subcommand

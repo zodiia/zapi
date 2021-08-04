@@ -2,7 +2,6 @@ package me.zodiia.api.data
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.bukkit.configuration.ConfigurationSection
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Transaction
 import java.io.File
@@ -12,15 +11,13 @@ import org.jetbrains.exposed.sql.transactions.transaction as sqlTransaction
 @Suppress("UnnecessaryAbstractClass")
 abstract class DataSourceProvider(
     dataFolder: File,
-    yamlConfig: ConfigurationSection
+    val config: DataSourceConfiguration
 ) {
     private val hikariConfig = HikariConfig()
     private val dataSource: HikariDataSource
     val db: Database
-    val config: DataSourceConfiguration
 
     init {
-        config = DataSourceConfiguration.fromConfig(yamlConfig)
         hikariConfig.jdbcUrl = getUrl(dataFolder)
         if (config.storageType.requireAuth) {
             hikariConfig.username = config.username

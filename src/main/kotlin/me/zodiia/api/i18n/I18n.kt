@@ -34,4 +34,8 @@ open class I18n(defaultId: String) {
         currentId = key
         current = get(currentId)
     }
+
+    internal fun clear() {
+        languages.clear()
+    }
 }

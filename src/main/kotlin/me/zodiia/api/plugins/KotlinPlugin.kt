@@ -10,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.io.OutputStream
 
 abstract class KotlinPlugin: JavaPlugin {
@@ -40,6 +39,7 @@ abstract class KotlinPlugin: JavaPlugin {
     }
 
     override fun onEnable() {
+        configRealm.reloadConfig()
         saveResources()
         Bukkit.getScheduler().runTask(this, KotlinPluginUpdateChecker(this))
     }
@@ -48,7 +48,12 @@ abstract class KotlinPlugin: JavaPlugin {
         // Nothing... at the moment
     }
 
-    final override fun getConfig(): Nothing = throw IllegalStateException("Config file provided from Bukkit is not supported. Please use KotlinPlugin#configRealm")
+    @Deprecated(
+        message = "Config file provided from Bukkit is not supported.",
+        level = DeprecationLevel.ERROR,
+        replaceWith = ReplaceWith("KotlinPlugin#configRealm"),
+    )
+    final override fun getConfig(): Nothing = throw IllegalStateException("Config file provided from Bukkit is not supported. Please use KotlinPlugin#configRealm.")
 
     fun getKotlinDescription() = internalKotlinDescription ?: throw IllegalStateException("Kotlin plugin description (kotlinDescription) block is missing.")
 

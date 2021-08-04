@@ -33,7 +33,11 @@ class ApiPlugin: KotlinPlugin {
         }
     }
 
-    override val configRealm: KotlinConfigRealm = KotlinConfigRealm(this)
+    override val configRealm: KotlinConfigRealm = object : KotlinConfigRealm(this) {
+        override fun reloadConfig() {
+            // Nothing
+        }
+    }
 
     constructor() : super()
     constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File) : super(

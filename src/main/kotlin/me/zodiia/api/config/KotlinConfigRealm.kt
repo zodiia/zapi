@@ -9,7 +9,7 @@ import me.zodiia.api.plugins.KotlinPlugin
 import java.io.File
 import kotlin.reflect.KClass
 
-open class KotlinConfigRealm(
+abstract class KotlinConfigRealm(
     private val plugin: KotlinPlugin,
     defaultI18nId: String = "en",
 ) {
@@ -18,11 +18,13 @@ open class KotlinConfigRealm(
     private val configLoader = ConfigLoader.Builder().addDecoder(FlatStringMapDecoder()).build()
     val i18n = I18n(defaultI18nId)
 
-    fun <T : Any> load(path: String, type: KClass<T>): T {
-        val sources = ConfigSource.fromFiles(listOf(File(plugin.dataFolder, path)))
+    fun <T : Any> load(path: String, type: KClass<T>): T = load(File(plugin.dataFolder, path), type)
+
+    fun <T : Any> load(file: File, type: KClass<T>): T {
+        val sources = ConfigSource.fromFiles(listOf(file))
 
         if (sources.isInvalid()) {
-            throw IllegalStateException("Could not load config file $path of type ${type.qualifiedName}.")
+            throw IllegalStateException("Could not load config file ${file.path} of type ${type.qualifiedName}.")
         }
         return configLoader.loadConfigOrThrow(type, sources.getUnsafe())
     }
@@ -30,6 +32,7 @@ open class KotlinConfigRealm(
     fun loadLanguages(folderPath: String) {
         val folder = File(plugin.dataFolder, folderPath)
 
+        i18n.clear()
         if (!folder.isDirectory) {
             throw IllegalStateException("Specified language folder is not a folder.")
         }
@@ -44,4 +47,6 @@ open class KotlinConfigRealm(
             i18n.add(it.nameWithoutExtension, lang.values)
         }
     }
+
+    abstract fun reloadConfig()
 }
