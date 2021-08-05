@@ -1,5 +1,7 @@
 package me.zodiia.api.util
 
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -20,6 +22,26 @@ fun Player.getPlayerEquipment(): List<ItemStack> {
 
 fun CommandSender.send(vararg messages: String) {
     messages.forEach {
-        sendMessage(ChatColor.translateAlternateColorCodes('&', it))
+        sendMessage(it.translateColors())
+    }
+}
+
+fun CommandSender.send(messages: Collection<String>) {
+    messages.forEach {
+        sendMessage(it.translateColors())
+    }
+}
+
+@JvmName("sendComponents")
+fun CommandSender.send(vararg messages: BaseComponent) {
+    messages.forEach {
+        spigot().sendMessage(it)
+    }
+}
+
+@JvmName("sendComponents")
+fun CommandSender.send(messages: Collection<BaseComponent>) {
+    messages.forEach {
+        spigot().sendMessage(it)
     }
 }

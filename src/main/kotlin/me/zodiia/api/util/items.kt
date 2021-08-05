@@ -28,7 +28,7 @@ fun ItemMeta.parseLore() { // TODO: Refactoring
             var wordLength = 0
 
             for (ch in word.toCharArray()) {
-                wordLength += ItemsHelper.charactersLength[ch] ?: 0
+                wordLength += ch.minecraftLength()
             }
             if (wordLength + currentLineLength > MAX_LORE_LINE_LENGTH) {
                 res.add(currentLine)
@@ -37,7 +37,7 @@ fun ItemMeta.parseLore() { // TODO: Refactoring
             } else {
                 if (currentLineLength != 0) {
                     currentLine += " "
-                    currentLineLength += ItemsHelper.charactersLength[' '] ?: 0
+                    currentLineLength += ' '.minecraftLength()
                 }
                 currentLine += word
                 currentLineLength += wordLength
@@ -100,13 +100,4 @@ fun getMaterials(pattern: String): Set<Material> {
     return res
 }
 
-private object ItemsHelper {
-    val charactersLength = mutableMapOf(
-        "i.,!:;|".toCharArray().toHashSet() to 2,
-        "l'`".toCharArray().toHashSet() to 3,
-        "It[] ".toCharArray().toHashSet() to 4,
-        "fk()\"*<>²".toCharArray().toHashSet() to 5,
-        "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghjmnopqrsuvwxyzÆÇÉÈÊËÔÖŒÜàæçéèêëñôöü0123456789/\\?&$%+-=#_".toCharArray().toHashSet() to 6,
-        "œ~@".toCharArray().toHashSet() to 7,
-    ).flatten()
-}
+

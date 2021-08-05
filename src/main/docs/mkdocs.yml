@@ -1,0 +1,35 @@
+site_name: zApi documentation
+site_url: https://zodiia.moe/
+nav:
+  - "Home": home.md
+  - "For server owners": server_owners.md
+  - "Getting started": getting_started.md
+  - "Features":
+      - "Kotlin plugins": features/plugins.md
+      - "Commands": features/commands.md
+      - "Configuration": features/config.md
+      - "Data":
+          - "Data sources": features/data/data_sources.md
+          - "Data retrieval": features/data/data_retrieval.md
+      - "Events": features/events.md
+      - "I18n (translations)": features/i18n.md
+      - "Logging": features/logging.md
+      - "Menus": features/menus.md
+      - "Reflection": features/reflection.md
+      - "Scheduler": features/scheduler.md
+      - "Timings": features/timings.md
+      - "Extension methods":
+          - "Items": features/util/items.md
+          - "Functions": features/util/functions.md
+          - "Lists": features/util/lists.md
+          - "Players": features/util/players.md
+          - "Strings": features/util/strings.md
+          - "Worlds and Locations": features/util/worlds_locations.md
+          - "Other extension methods": features/util/others.md
+      - "Plugin integrations":
+          - "FSMgasm": features/integrations/fsmgasm.md
+          - "NBT API": features/integrations/nbt_api.md
+          - "PlaceholderAPI": features/integrations/placeholderapi.md
+          - "Vault": features/integrations/vault.md
+theme:
+  name: material

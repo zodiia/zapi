@@ -1,5 +1,8 @@
 package me.zodiia.api.util
 
+import net.md_5.bungee.api.chat.BaseComponent
+import net.md_5.bungee.api.chat.TextComponent
+
 const val COLOR_CHARS = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx"
 const val COLOR_PREFIX = 167.toChar()
 
@@ -47,3 +50,46 @@ fun MutableCollection<String>.addPartialAndFullMatches(token: String, values: It
         }
     }
 }
+
+fun Char.minecraftLength() = minecraftCharactersLength[this] ?: 6
+
+fun String.minecraftLength(): Int {
+    var res = 0
+
+    this.toCharArray().forEach {
+        res += it.minecraftLength()
+    }
+    return res
+}
+
+fun String.minecraftChatCentered(): String {
+    val res = StringBuilder()
+    val length = this.minecraftLength()
+
+    if (length > 320) {
+        return this
+    }
+    res.append(" ".repeat((320 - length) / 8))
+    res.append(this)
+    return res.toString()
+}
+
+fun BaseComponent.minecraftLength(): Int = this.toPlainText().minecraftLength()
+
+fun BaseComponent.minecraftChatCentered(): BaseComponent {
+    val length = this.toPlainText().minecraftLength()
+
+    if (length > 320) {
+        return this
+    }
+    return TextComponent(TextComponent(" ".repeat((320 - length) / 8)), this)
+}
+
+private val minecraftCharactersLength = mutableMapOf(
+    "i.,!:;|".toCharArray().toHashSet() to 2,
+    "l'`".toCharArray().toHashSet() to 3,
+    "It[] ".toCharArray().toHashSet() to 4,
+    "fk()\"*<>²".toCharArray().toHashSet() to 5,
+    "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghjmnopqrsuvwxyzÆÇÉÈÊËÔÖŒÜàæçéèêëñôöü0123456789/\\?&$%+-=#_".toCharArray().toHashSet() to 6,
+    "œ~@".toCharArray().toHashSet() to 7,
+).flatten()
