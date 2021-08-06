@@ -8,7 +8,6 @@ import me.zodiia.api.util.send
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ComponentBuilder
-import net.md_5.bungee.api.chat.TextComponent
 
 fun versionCommand(plugin: KotlinPlugin, perm: String? = null): Command = command {
     permission = perm
@@ -53,11 +52,6 @@ fun versionCommand(plugin: KotlinPlugin, perm: String? = null): Command = comman
                     .color(ChatColor.GREEN)
             }
             ctx.sender.send(component.currentComponent.minecraftChatCentered())
-        }
-        if (plugin.getKotlinDescription().urls.hashCode() != 0) {
-            var component: TextComponent? = null
-
-            if (plugin.getKotlinDescription().urls.)
             ctx.sender.send("")
         }
         ctx.sender.send("&aMade with &c♥ &aby ${plugin.description.authors.joinToString(",")}".minecraftChatCentered())

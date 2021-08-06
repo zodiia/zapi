@@ -1,7 +1,6 @@
 package me.zodiia.api.i18n
 
 import me.zodiia.api.util.translateColors
-import org.bukkit.ChatColor
 
 class I18nLanguage(val language: String, private val translations: Map<String, Array<String>>) {
     companion object {

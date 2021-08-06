@@ -9,15 +9,7 @@ import org.bukkit.plugin.java.JavaPluginLoader
 import java.io.File
 
 class ApiPlugin: KotlinPlugin {
-    companion object {
-        private var constructedPlugin: KotlinPlugin? = null
-
-        val plugin by lazy { constructedPlugin ?: getProvidingPlugin(ApiPlugin::class.java) }
-    }
-
     init {
-        constructedPlugin = this
-
         kotlinDescription {
             minecraftVersion(">= 1.16.5")
 

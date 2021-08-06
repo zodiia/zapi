@@ -1,13 +1,11 @@
 package me.zodiia.api.i18n
 
 import me.zodiia.api.exceptions.MissingLanguageException
-import java.io.File
-import kotlin.properties.Delegates
 
 open class I18n(defaultId: String) {
     private val languages = mutableSetOf<I18nLanguage>()
     private var current: I18nLanguage? = null
-    var currentId = defaultId
+    private var currentId = defaultId
 
     @Throws(MissingLanguageException::class)
     fun get(language: String): I18nLanguage {

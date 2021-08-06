@@ -7,10 +7,8 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.regex.Pattern
 
-object Placeholders {
-    private val PLACEHOLDER_REGEX = Pattern.compile("%[^\\s%]+%")
+class LocalPlaceholders {
     private val localPlaceholders = hashSetOf<Placeholder>()
-    private val placeholderApi: Boolean by lazy { Bukkit.getServer().pluginManager.getPlugin("PlaceholderAPI") != null }
 
     private fun placeholderParse(text: String, player: Player?): String {
         var res = text
@@ -31,8 +29,10 @@ object Placeholders {
         return res
     }
 
-    fun register(placeholder: Placeholder, plugin: Plugin) {
-        if (placeholderApi) {
+    fun registerLocally(placeholder: Placeholder) = localPlaceholders.add(placeholder)
+
+    fun registerGlobally(placeholder: Placeholder, plugin: Plugin) {
+        if (LocalPlaceholders.placeholderApiAvailable) {
             object: PlaceholderExpansion() {
                 override fun getIdentifier(): String = placeholder.name
                 override fun getAuthor(): String = plugin.description.authors.toString()
@@ -41,16 +41,18 @@ object Placeholders {
                 override fun persist(): Boolean = true
                 override fun onPlaceholderRequest(player: Player?, params: String): String = placeholder.exec(player, params)
             }
-        } else {
-            localPlaceholders.add(placeholder)
         }
     }
 
-    fun parse(text: String, player: Player?): String {
-        return if (placeholderApi) {
-            PlaceholderAPI.setPlaceholders(player, text)
-        } else {
+    fun parse(text: String, player: Player?): String =
+        if (placeholderApiAvailable)
+            PlaceholderAPI.setPlaceholders(player, placeholderParse(text, player))
+        else
             placeholderParse(text, player)
-        }
+
+
+    companion object {
+        private val PLACEHOLDER_REGEX = Pattern.compile("%[^\\s%]+%")
+        internal val placeholderApiAvailable: Boolean by lazy { Bukkit.getServer().pluginManager.getPlugin("PlaceholderAPI") != null }
     }
 }

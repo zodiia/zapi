@@ -6,9 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-object Scheduler {
+class Scheduler {
     private val scheduledTasks = hashSetOf<Task>()
-    private const val TICKS_PER_SECOND = 20L
 
     init {
         Bukkit.getScheduler().runTaskTimer(JavaPlugin.getPlugin(ApiPlugin::class.java), Runnable {
@@ -50,5 +49,9 @@ object Scheduler {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TICKS_PER_SECOND = 20L
     }
 }
