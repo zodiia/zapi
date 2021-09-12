@@ -15,39 +15,22 @@ abstract class KotlinConfigRealm(
     private val defaultI18nId: String = "en",
     private val i18nDirectory: String = "lang",
 ) {
-    var loadedFiles = hashMapOf<String, Any>()
+    private var loadedFiles = hashMapOf<String, Any>()
     val i18n = I18n(defaultI18nId)
 
-    inline fun <reified T : Any> configFile(path: String) = object {
-        operator fun getValue(thisRef: Any?, property: KProperty<*>): T = loadFile(File(plugin.dataFolder, path))
-    }
+    fun <T : Any> configFile(path: String) = ConfigFileDelegate<T>(File(plugin.dataFolder, path), this)
 
-    inline fun <reified T : Any> configFileArray(path: String) = object {
-        operator fun getValue(thisRef: Any?, property: KProperty<*>): Map<String, T> {
-            val directory = File(plugin.dataFolder, path)
-            val values = HashMap<String, T>()
+    fun <T : Any> configFileArray(path: String) = ConfigFileArrayDelegate<T>(File(plugin.dataFolder, path), this)
 
-            if (!directory.isDirectory) {
-                throw IllegalStateException("Specified path is not a directory.")
-            }
-            directory.listFiles()?.forEach {
-                if (it.isFile) {
-                    values[it.name] = loadFile(it)
-                }
-            }
-            return values
-        }
-    }
-
-    inline fun <reified T : Any> loadFile(file: File): T {
+    internal fun <T : Any> loadFile(file: File): T {
         if (loadedFiles.containsKey(file.path)) {
             return loadedFiles[file.path] as T
         }
 
         val cfg: T = when (file.extension) {
-            "json" -> Config().from.json.file(file).toValue()
-            "yml", "yaml" -> Config().from.yaml.file(file).toValue()
-            "conf" -> Config().from.hocon.file(file).toValue()
+            "json" -> Config().from.json.file(file).toDataClass()
+            "yml", "yaml" -> Config().from.yaml.file(file).toDataClass()
+            "conf" -> Config().from.hocon.file(file).toDataClass()
             else -> throw IllegalStateException("Config format not accepted: ${file.extension}")
         }
         loadedFiles[file.path] = cfg
