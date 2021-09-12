@@ -9,10 +9,11 @@ import java.time.Instant
 
 class Command(
     parent: Command? = null,
+    internal var label: String = "",
     dsl: Command.() -> Unit,
 ) {
-    private val subcommands = hashMapOf<String, Command>()
-    private val arguments = sortedMapOf<Int, Argument>()
+    internal val subcommands = hashMapOf<String, Command>()
+    internal val arguments = sortedMapOf<Int, Argument>()
     private var executor: ((Context) -> Unit)
     private var syntaxReassigned = false
     private var syntaxExecutor: ((Context, Int) -> Unit)
@@ -40,13 +41,23 @@ class Command(
     var aliases: Collection<String> = emptySet()
 
     /**
-     * Controls the description of the command.
+     * Controls the description's i18n key of the command.
      *
      * This description will be used in help commands. It should provide information about what the command does and how to use it.
      *
      * Default value: none
      */
     var description: String? = null
+
+    /**
+     * Controls whether this (sub)command is a subcommand group only.
+     *
+     * If defined as subcommand group, this command will have no executor, and instead will always throw a syntax error.
+     * It will also not be displayed in help commands.
+     *
+     * Default value: false
+     */
+    var group: Boolean = false
 
     init {
         executor = { ctx ->
@@ -74,6 +85,13 @@ class Command(
                 return commandTabComplete(sender, alias, args, Instant.now())
             }
         }
+    }
+
+    internal fun getCompleteLabel(): String {
+        if (parent != null) {
+            return "${parent!!.getCompleteLabel()} $label"
+        }
+        return label
     }
 
     private fun commandExecute(sender: CommandSender, alias: String, args: Array<out String>, instant: Instant) {
@@ -191,7 +209,7 @@ class Command(
      * @param dsl Subcommand definition
      */
     fun subcommand(name: String, dsl: Command.() -> Unit) {
-        val cmd = Command(this, dsl)
+        val cmd = Command(this, "$label $name", dsl)
 
         subcommand(name, cmd)
     }

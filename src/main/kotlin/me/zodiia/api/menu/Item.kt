@@ -1,10 +1,12 @@
 package me.zodiia.api.menu
 
+import fr.minuskube.inv.ClickableItem
 import me.zodiia.api.util.getItemMetaSafe
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
@@ -21,6 +23,7 @@ class Item(
     private var name: String? = null
     private var lore: List<String>? = null
     private var unbreakable = false
+    private var onClick: ((InventoryClickEvent) -> Unit) = {}
 
     init {
         dsl.invoke(this)
@@ -70,7 +73,12 @@ class Item(
         return this
     }
 
-    fun create(): ItemStack {
+    fun onClick(handler: (InventoryClickEvent) -> Unit): Item {
+        this.onClick = handler
+        return this
+    }
+
+    fun create(): ClickableItem {
         val item = ItemStack(type, amount)
         val meta = item.getItemMetaSafe()
 
@@ -88,7 +96,7 @@ class Item(
             (meta as Damageable).setDamage(damage)
         }
         item.setItemMeta(meta)
-        return item
+        return ClickableItem.of(item, onClick)
     }
 
     class CustomEnchantment(

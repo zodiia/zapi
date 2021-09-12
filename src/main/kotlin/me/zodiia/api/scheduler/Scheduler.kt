@@ -2,6 +2,7 @@ package me.zodiia.api.scheduler
 
 import me.zodiia.api.ApiPlugin
 import org.bukkit.Bukkit
+import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -9,8 +10,8 @@ import java.time.ZoneId
 class Scheduler {
     private val scheduledTasks = hashSetOf<Task>()
 
-    init {
-        Bukkit.getScheduler().runTaskTimer(JavaPlugin.getPlugin(ApiPlugin::class.java), Runnable {
+    fun init(plugin: Plugin) {
+        Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
             val ranTasks = hashSetOf<Task>()
 
             synchronized(scheduledTasks) {

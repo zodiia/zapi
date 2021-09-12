@@ -45,7 +45,7 @@ class Argument(dsl: Argument.() -> Unit) {
     var permission: String? = null
 
     /**
-     * Controls the name of this argument.
+     * Controls the name's i18n key of this argument.
      *
      * It will be used for help commands, and should accurately describe what kind of argument it is, in a very short manner.
      *

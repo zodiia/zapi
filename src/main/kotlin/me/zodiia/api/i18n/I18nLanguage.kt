@@ -2,19 +2,19 @@ package me.zodiia.api.i18n
 
 import me.zodiia.api.util.translateColors
 
-class I18nLanguage(val language: String, private val translations: Map<String, Array<String>>) {
+class I18nLanguage(val language: String, private val translations: Map<String, List<String>>) {
     companion object {
         const val missingTranslations = "#MISSING_TRANSLATIONS#"
     }
 
-    fun get(key: String, vararg args: Pair<String, String>): String {
+    fun get(key: String?, vararg args: Pair<String, String>): String {
         var line = translations[key]?.getOrNull(0) ?: return missingTranslations
 
         args.forEach { line = line.replace("\$${it.first}", it.second) }
         return line.translateColors()
     }
 
-    fun get(key: String, args: Map<String, String>): String {
+    fun get(key: String?, args: Map<String, String>): String {
         var line = translations[key]?.getOrNull(0) ?: return missingTranslations
 
         args.forEach { line = line.replace("\$${it.key}", it.value) }
@@ -35,7 +35,7 @@ class I18nLanguage(val language: String, private val translations: Map<String, A
         line
     }
 
-    fun getArray(key: String, vararg args: Pair<String, String>): Array<String> {
+    fun getArray(key: String?, vararg args: Pair<String, String>): Array<String> {
         val lines = translations[key] ?: return arrayOf(missingTranslations)
 
         return Array(lines.size) { idx ->
@@ -46,7 +46,7 @@ class I18nLanguage(val language: String, private val translations: Map<String, A
         }
     }
 
-    fun getArray(key: String, args: Map<String, String>): Array<String> {
+    fun getArray(key: String?, args: Map<String, String>): Array<String> {
         val lines = translations[key] ?: return arrayOf(missingTranslations)
 
         return Array(lines.size) { idx ->
@@ -57,9 +57,9 @@ class I18nLanguage(val language: String, private val translations: Map<String, A
         }
     }
 
-    fun getKeys(key: String, deep: Boolean = false): Array<String> = translations
+    fun getKeys(key: String?, deep: Boolean = false): Array<String> = translations
         .filterKeys {
-            !(!it.startsWith("$key.") || (deep && it.substring(key.length + 1).contains('.')))
+            !(!it.startsWith("$key.") || (deep && it.substring((key?.length ?: 0) + 1).contains('.')))
         }
         .keys
         .toTypedArray()

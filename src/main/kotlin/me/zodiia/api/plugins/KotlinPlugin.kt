@@ -39,8 +39,8 @@ abstract class KotlinPlugin: JavaPlugin {
     }
 
     override fun onEnable() {
-        configRealm.reloadConfig()
         saveResources()
+        configRealm.reloadConfig()
         Bukkit.getScheduler().runTask(this, KotlinPluginUpdateChecker(this))
     }
 
@@ -98,16 +98,19 @@ abstract class KotlinPlugin: JavaPlugin {
         val invalidVersions = hashMapOf<String, Pair<String, String>>()
 
         getKotlinDescription().pluginDependencies.forEach {
-            if (!checkVersionRange(it.value, Bukkit.getPluginManager().getPlugin(it.key)!!.description.version)) {
-                invalidVersions[it.key] = it.value to Bukkit.getPluginManager().getPlugin(it.key)!!.description.version
+            val version = Bukkit.getPluginManager().getPlugin(it.key)!!.description.version.split('-')[0]
+
+            if (!checkVersionRange(it.value, version)) {
+                invalidVersions[it.key] = it.value to version
             }
         }
         getKotlinDescription().softPluginDependencies.forEach {
             if (Bukkit.getPluginManager().getPlugin(it.key) == null) {
                 return@forEach
             }
-            if (!checkVersionRange(it.value, Bukkit.getPluginManager().getPlugin(it.key)!!.description.version)) {
-                invalidVersions[it.key] = it.value to Bukkit.getPluginManager().getPlugin(it.key)!!.description.version
+            val version = Bukkit.getPluginManager().getPlugin(it.key)!!.description.version.split('-')[0]
+            if (!checkVersionRange(it.value, version)) {
+                invalidVersions[it.key] = it.value to version
             }
         }
         if (invalidVersions.size > 0) {
@@ -116,7 +119,7 @@ abstract class KotlinPlugin: JavaPlugin {
                 "Please update the following plugin(s) on your server to a compatible version:"
             )
             invalidVersions.forEach {
-                Console.error("  - ${it.key} (current: ${it.value.first}, required: ${it.value.second}")
+                Console.error("  - ${it.key} (current: ${it.value.second}, required: ${it.value.first}")
             }
             throw IllegalStateException("One or more plugin dependencies have an incompatible version installed on the server.")
         }
@@ -128,7 +131,7 @@ abstract class KotlinPlugin: JavaPlugin {
                 "You are running in test mode.",
                 "If you see this message in your server's console, please report it immediately."
             )
-        } else if (!Semver(description.version).isStable) {
+        } else if (!Semver(description.version, Semver.SemverType.NPM).isStable) {
             Console.warn(
                 "You are running a development version of ${description.name}. Please be aware that unknown bugs may occur.",
                 "The author of this plugin is not responsible for any damage to your server because of bugs from this plugin."

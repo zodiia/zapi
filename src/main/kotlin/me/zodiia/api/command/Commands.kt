@@ -36,6 +36,7 @@ object Commands {
      * @param command Command to register
      */
     fun register(label: String, prefix: String, command: Command) {
+        command.label = label
         commandMap.register(label, prefix.lowercase(), command.getRegistration(label))
     }
 }

@@ -17,7 +17,7 @@ open class I18n(defaultId: String) {
         throw MissingLanguageException(language)
     }
 
-    fun add(language: String, map: Map<String, Array<String>>): I18nLanguage {
+    fun add(language: String, map: Map<String, List<String>>): I18nLanguage {
         val lang = I18nLanguage(language, map)
 
         languages.add(lang)
