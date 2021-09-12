@@ -22,6 +22,8 @@ abstract class KotlinConfigRealm(
 
     fun <T : Any> configFileArray(path: String) = ConfigFileArrayDelegate<T>(File(plugin.dataFolder, path), this)
 
+    open fun onReload() {}
+
     internal fun <T : Any> loadFile(file: File): T {
         if (loadedFiles.containsKey(file.path)) {
             return loadedFiles[file.path] as T
